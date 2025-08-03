@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>n8n Workflow Dashboard</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body {
+            background: linear-gradient(120deg,#f4f5f7 0%,#e9ecef 100%);
+            font-family: 'Segoe UI',sans-serif;
+        }
+        .card {
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(40,60,80,0.09);
+            border: none;
+        }
+        .stat-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 1.2rem 1.2rem 0.1rem 1.2rem;
+            margin-bottom: 1.1rem;
+        }
+        .wf-status {
+            font-size: 0.99em;
+            padding: 3px 10px;
+            border-radius: 8px;
+        }
+        .wf-success {background: #e2f7cb; color: #2d7c0b;}
+        .wf-stopped {background: #e2e3e5; color: #636363;}
+        .wf-error {background: #ffd6d6; color: #bb2525;}
+        .wf-active {color:#2d7c0b;}
+        .wf-inactive {color:#636363;}
+        .btn-toggle {border-radius: 6px;}
+        .animate__animated {animation-duration: 1s;}
+        .chart {height: 70px;}
+        .wf-name {font-weight: 500;}
+        .nav-tabs .nav-link {font-size:1.1em;}
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <h1 class="mb-4 animate__animated animate__fadeInDown">n8n Workflow Dashboard</h1>
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" href="/">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/workflow_requests">Bestellanfragen (Intern)</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/neue-anfrage" target="_blank">
+                    <i class="fas fa-external-link-alt me-1"></i>Neue Anfrage (Extern)
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/prozess-anfrage">Prozess Anfrage</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin">Admin</a>
+            </li>
+        </ul>
+        <div class="row mb-3">
+            <div class="col-md-2 stat-box animate__animated animate__fadeInLeft">
+                <div class="fw-bold">Workflows aktiv</div>
+                <div class="wf-active fs-4">{{ active_count }}</div>
+            </div>
+            <div class="col-md-2 stat-box animate__animated animate__fadeInLeft">
+                <div class="fw-bold">Gestoppt</div>
+                <div class="wf-inactive fs-4">{{ stopped_count }}</div>
+            </div>
+            <div class="col-md-2 stat-box animate__animated animate__fadeInLeft">
+                <div class="fw-bold">Erfolgreich</div>
+                <div class="wf-success fs-4">{{ success_count }}</div>
+            </div>
+            <div class="col-md-2 stat-box animate__animated animate__fadeInLeft">
+                <div class="fw-bold">Fehler</div>
+                <div class="wf-error fs-4">{{ error_count }}</div>
+            </div>
+            <div class="col-md-4 stat-box animate__animated animate__fadeInRight">
+                <div class="fw-bold">Ausführungen heute</div>
+                <div class="fs-4">{{ total_runs }}</div>
+                <canvas id="chart1" class="chart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Neue Sektion für Bestellanfragen aus der Datenbank -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card px-3 py-3 animate__animated animate__fadeInUp">
+                    <h4 class="mb-3">📋 Aktuelle Bestellanfragen</h4>
+                    {% if order_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Nummer</th>
+                                        <th>Beschreibung</th>
+                                        <th>Dringlichkeit</th>
+                                        <th>Link</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for req in order_requests[:5] %}
+                                    <tr>
+                                        <td><span class="badge bg-primary">{{ req.id }}</span></td>
+                                        <td class="fw-bold">{{ req.name or 'Unbekannt' }}</td>
+                                        <td>{{ req.number or 'N/A' }}</td>
+                                        <td>
+                                            <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+                                                {{ (req.description or 'Keine Beschreibung')[:100] }}{% if req.description and req.description|length > 100 %}...{% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge {% if req.urgency and req.urgency >= 8 %}bg-danger{% elif req.urgency and req.urgency >= 5 %}bg-warning{% else %}bg-success{% endif %}">
+                                                {{ req.urgency or 'N/A' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if req.link %}
+                                                <a href="{{ req.link }}" target="_blank" class="btn btn-sm btn-outline-primary">🔗 Link</a>
+                                            {% else %}
+                                                <span class="text-muted">Kein Link</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if order_requests|length > 5 %}
+                            <div class="text-center mt-3">
+                                <a href="/workflow_requests" class="btn btn-outline-primary">Alle {{ order_requests|length }} Anfragen anzeigen</a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-3x mb-3"></i>
+                            <p>Keine Bestellanfragen vorhanden</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row animate__animated animate__fadeInUp">
+            {% for wf in workflows %}
+            <div class="col-md-4 mb-4">
+                <div class="card px-3 py-3">
+                    <div class="wf-name fs-5 mb-2">{{ wf.name }}</div>
+                    <div>
+                        <span class="wf-status {% if wf.status == 'success' %}wf-success{% elif wf.status == 'stopped' %}wf-stopped{% else %}wf-error{% endif %} animate__animated animate__fadeIn">
+                            {{ wf.status.capitalize() }}
+                        </span>
+                        <span class="ms-3 {% if wf.active %}wf-active{% else %}wf-inactive{% endif %}">
+                            {% if wf.active %}Aktiv{% else %}Gestoppt{% endif %}
+                        </span>
+                    </div>
+                    <div class="mt-2">Letzte Ausführung: <span class="fw-light">{{ wf.last_run }}</span></div>
+                    <div class="mt-1">Heute: <span class="fw-bold">{{ wf.runs_today }}</span> Ausführungen</div>
+                    <button class="btn btn-sm btn-toggle mt-3 {% if wf.active %}btn-danger{% else %}btn-success{% endif %}" onclick="toggleWorkflow({{ wf.id }}, this)">
+                        {% if wf.active %}Stoppen{% else %}Starten{% endif %}
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Demo Chart, du kannst echte Daten nutzen!
+        const ctx = document.getElementById('chart1').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['CRM', 'Newsletter', 'Slack'],
+                datasets: [{
+                    label: 'Runs',
+                    data: [{% for wf in workflows %}{{ wf.runs_today }},{% endfor %}],
+                    backgroundColor: ['#e2f7cb', '#e2e3e5', '#ffd6d6']
+                }]
+            },
+            options: {
+                plugins: {legend:{display:false}},
+                scales: {y:{beginAtZero:true}}
+            }
+        });
+
+        function toggleWorkflow(wf_id, btn) {
+            fetch("/toggle/" + wf_id, {method:"POST"})
+            .then(r => r.json())
+            .then(d => {
+                if(d.active) {
+                    btn.classList.remove("btn-success");
+                    btn.classList.add("btn-danger");
+                    btn.innerText = "Stoppen";
+                    btn.closest('.card').querySelector('.wf-status').innerText = "Success";
+                    btn.closest('.card').querySelector('.wf-status').className = "wf-status wf-success animate__animated animate__pulse";
+                    btn.closest('.card').querySelector('.wf-active').innerText = "Aktiv";
+                    btn.closest('.card').querySelector('.wf-active').className = "wf-active";
+                } else {
+                    btn.classList.remove("btn-danger");
+                    btn.classList.add("btn-success");
+                    btn.innerText = "Starten";
+                    btn.closest('.card').querySelector('.wf-status').innerText = "Stopped";
+                    btn.closest('.card').querySelector('.wf-status').className = "wf-status wf-stopped animate__animated animate__pulse";
+                    btn.closest('.card').querySelector('.wf-inactive').innerText = "Gestoppt";
+                    btn.closest('.card').querySelector('.wf-inactive').className = "wf-inactive";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

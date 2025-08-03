@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prozess Anfrage - n8n Workflow</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .loading-spinner {
+            display: none;
+        }
+        
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .error-message {
+            display: none;
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .input-group-text {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px 0 0 12px;
+        }
+        
+        .input-group .form-control {
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+        }
+        
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .shape:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            top: 20%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+        
+        .shape:nth-child(3) {
+            bottom: 10%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape">
+            <i class="fas fa-cog fa-3x"></i>
+        </div>
+        <div class="shape">
+            <i class="fas fa-project-diagram fa-2x"></i>
+        </div>
+        <div class="shape">
+            <i class="fas fa-rocket fa-2x"></i>
+        </div>
+    </div>
+    
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-6">
+                <div class="form-container p-5 animate__animated animate__fadeInUp">
+                    <div class="text-center mb-4">
+                        <div class="header-icon animate__animated animate__bounceIn">
+                            <i class="fas fa-robot fa-2x text-white"></i>
+                        </div>
+                        <h2 class="fw-bold text-dark mb-2">Prozess Automatisierung</h2>
+                        <p class="text-muted">Beschreiben Sie Ihren Prozess und wir automatisieren ihn für Sie!</p>
+                    </div>
+                    
+                    <form id="processForm">
+                        <div class="mb-4">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-user me-2 text-primary"></i>
+                                Name <span class="required">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" class="form-control" id="name" name="name" required 
+                                       placeholder="Ihr vollständiger Name">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="firma" class="form-label">
+                                <i class="fas fa-building me-2 text-primary"></i>
+                                Firma <span class="required">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-building"></i>
+                                </span>
+                                <input type="text" class="form-control" id="firma" name="firma" required 
+                                       placeholder="Name Ihres Unternehmens">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="kontakt" class="form-label">
+                                <i class="fas fa-envelope me-2 text-primary"></i>
+                                Kontaktmöglichkeit <span class="required">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input type="email" class="form-control" id="kontakt" name="kontakt" required 
+                                       placeholder="ihre.email@firma.de">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="link" class="form-label">
+                                <i class="fas fa-link me-2 text-primary"></i>
+                                Link <span class="text-muted">(optional)</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-link"></i>
+                                </span>
+                                <input type="url" class="form-control" id="link" name="link" 
+                                       placeholder="https://ihre-website.de">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="beschreibung" class="form-label">
+                                <i class="fas fa-file-alt me-2 text-primary"></i>
+                                Beschreibung des Prozesses <span class="required">*</span>
+                            </label>
+                            <textarea class="form-control" id="beschreibung" name="beschreibung" rows="6" required
+                                      placeholder="Beschreiben Sie detailliert den Prozess, den Sie automatisieren möchten...&#10;&#10;Beispiel:&#10;- Welche Schritte sind aktuell manuell?&#10;- Welche Systeme sind beteiligt?&#10;- Wie oft läuft der Prozess ab?&#10;- Was ist das gewünschte Ergebnis?"></textarea>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Je detaillierter Ihre Beschreibung, desto besser können wir Ihren Prozess verstehen und automatisieren.
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg animate__animated animate__pulse animate__infinite">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                Anfrage senden
+                                <div class="loading-spinner spinner-border spinner-border-sm ms-2" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="testWebhook()">
+                                <i class="fas fa-flask me-1"></i>Webhook testen
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="success-message mt-4 animate__animated animate__fadeIn">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <h4>Erfolgreich gesendet!</h4>
+                        <p class="mb-0">Vielen Dank für Ihre Anfrage. Wir werden uns zeitnah bei Ihnen melden.</p>
+                    </div>
+                    
+                    <div class="error-message mt-4 animate__animated animate__fadeIn">
+                        <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                        <h4>Fehler beim Senden</h4>
+                        <p class="mb-0">Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie uns direkt.</p>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Ihre Daten werden sicher übertragen und vertraulich behandelt
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /**
+         * JWT Token Konfiguration für n8n OAuth
+         * 
+         * So erhalten Sie Ihren JWT Token:
+         * 1. Loggen Sie sich in Ihr n8n Dashboard ein
+         * 2. Gehen Sie zu "Settings" → "API" oder "OAuth"
+         * 3. Erstellen Sie einen neuen API Token oder OAuth Token
+         * 4. Kopieren Sie den Token und ersetzen Sie 'YOUR_JWT_TOKEN_HERE' unten
+         * 
+         * Beispiel:
+         * const N8N_JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+         */
+        
+        // JWT Token für n8n OAuth Authentifizierung
+        const N8N_JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJuOG4tZGFzaGJvYXJkIiwic3ViIjoid2ViaG9vay1hY2Nlc3MiLCJhdWQiOiJuOG4tYXBpIiwiZXhwIjoxNzg1NzYyMDY0LCJpYXQiOjE3NTQyMjYwNjQsInNjb3BlIjoid2ViaG9vazpyZWFkIHdlYmhvb2s6d3JpdGUifQ.SY3I6MyNNXIXdNTYDqHk_79gNu_2QT_DzjxSZlmJbaA'; // Gültiger JWT mit Secret "Toastbrot"
+        
+        // Hilfsfunktion zur Validierung des JWT Tokens
+        function validateJWTToken() {
+            if (!N8N_JWT_TOKEN || N8N_JWT_TOKEN === 'YOUR_JWT_TOKEN_HERE') {
+                console.warn('⚠️ Warnung: JWT Token nicht konfiguriert. Bitte setzen Sie einen gültigen Token.');
+                return false;
+            }
+            return true;
+        }
+        
+        document.getElementById('processForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // UI Updates
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const loadingSpinner = submitBtn.querySelector('.loading-spinner');
+            const successMessage = document.querySelector('.success-message');
+            const errorMessage = document.querySelector('.error-message');
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            loadingSpinner.style.display = 'inline-block';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Wird gesendet...';
+            
+            // Collect form data
+            const formData = {
+                name: document.getElementById('name').value,
+                firma: document.getElementById('firma').value,
+                kontakt: document.getElementById('kontakt').value,
+                link: document.getElementById('link').value || '',
+                beschreibung: document.getElementById('beschreibung').value
+            };
+            
+            try {
+                // Convert form data to URL parameters for GET request
+                const urlParams = new URLSearchParams();
+                urlParams.append('name', formData.name);
+                urlParams.append('firma', formData.firma);
+                urlParams.append('kontakt', formData.kontakt);
+                urlParams.append('link', formData.link);
+                urlParams.append('beschreibung', formData.beschreibung);
+                
+                // Send to n8n webhook as GET request with URL parameters
+                const webhookUrl = `https://stade-001.app.n8n.cloud/webhook-test/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                
+                const response = await fetch(webhookUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${N8N_JWT_TOKEN}`
+                    },
+                    mode: 'cors'
+                });
+                
+                // Success if response is OK or if we get any response (n8n might not return perfect status codes)
+                if (response.status >= 200 && response.status < 400) {
+                    // Success
+                    successMessage.style.display = 'block';
+                    e.target.reset(); // Clear form
+                    
+                    // Scroll to success message
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Add success animation to form
+                    document.querySelector('.form-container').classList.add('animate__animated', 'animate__pulse');
+                    
+                } else if (response.status === 401 || response.status === 403) {
+                    throw new Error(`Authentifizierungsfehler (${response.status}): JWT Token ungültig oder abgelaufen`);
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Try alternative method if CORS fails
+                if (error.message.includes('CORS') || error.message.includes('network')) {
+                    try {
+                        // Fallback: try with no-cors mode (fire and forget)
+                        const urlParams = new URLSearchParams();
+                        urlParams.append('name', formData.name);
+                        urlParams.append('firma', formData.firma);
+                        urlParams.append('kontakt', formData.kontakt);
+                        urlParams.append('link', formData.link);
+                        urlParams.append('beschreibung', formData.beschreibung);
+                        
+                        const webhookUrl = `https://stade-001.app.n8n.cloud/webhook-test/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                        
+                        await fetch(webhookUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${N8N_JWT_TOKEN}`
+                            },
+                            mode: 'no-cors'
+                        });
+                        
+                        // If no error thrown, assume success
+                        successMessage.style.display = 'block';
+                        e.target.reset();
+                        successMessage.scrollIntoView({ behavior: 'smooth' });
+                        document.querySelector('.form-container').classList.add('animate__animated', 'animate__pulse');
+                        
+                    } catch (fallbackError) {
+                        console.error('Fallback error:', fallbackError);
+                        errorMessage.style.display = 'block';
+                        errorMessage.innerHTML = `
+                            <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                            <h4>Verbindungsproblem</h4>
+                            <p class="mb-2">Die Daten konnten nicht übertragen werden. Mögliche Ursachen:</p>
+                            <ul class="text-start">
+                                <li>Webhook-URL ist nicht erreichbar</li>
+                                <li>CORS-Einstellungen in n8n prüfen</li>
+                                <li>Internetverbindung prüfen</li>
+                            </ul>
+                            <p class="mb-0">Bitte kontaktieren Sie uns direkt oder versuchen Sie es später erneut.</p>
+                        `;
+                        errorMessage.scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else {
+                    errorMessage.style.display = 'block';
+                    
+                    // Spezielle Behandlung für JWT/Auth Fehler
+                    if (error.message.includes('Authentifizierungsfehler') || error.message.includes('401') || error.message.includes('403')) {
+                        errorMessage.innerHTML = `
+                            <i class="fas fa-key fa-2x mb-2"></i>
+                            <h4>Authentifizierungsfehler</h4>
+                            <p class="mb-2">JWT Token ist ungültig oder abgelaufen. Bitte:</p>
+                            <ul class="text-start">
+                                <li>JWT Token in der Konfiguration prüfen</li>
+                                <li>Token ggf. erneuern</li>
+                                <li>OAuth-Einstellungen in n8n überprüfen</li>
+                            </ul>
+                            <p class="mb-0">Kontaktieren Sie den Administrator für einen neuen Token.</p>
+                        `;
+                    } else {
+                        errorMessage.innerHTML = `
+                            <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                            <h4>Fehler beim Senden</h4>
+                            <p class="mb-0">Fehlerdetails: ${error.message}</p>
+                            <p class="mb-0">Bitte versuchen Sie es erneut oder kontaktieren Sie uns direkt.</p>
+                        `;
+                    }
+                    errorMessage.scrollIntoView({ behavior: 'smooth' });
+                }
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Anfrage senden';
+            }
+        });
+        
+        // Add some interactive effects
+        document.querySelectorAll('.form-control, .form-select').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('animate__animated', 'animate__pulse');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('animate__animated', 'animate__pulse');
+            });
+        });
+        
+        // Character counter for description
+        const beschreibungField = document.getElementById('beschreibung');
+        const charCounter = document.createElement('div');
+        charCounter.className = 'form-text text-end';
+        charCounter.style.fontSize = '0.8rem';
+        beschreibungField.parentElement.appendChild(charCounter);
+        
+        beschreibungField.addEventListener('input', function() {
+            const length = this.value.length;
+            charCounter.textContent = `${length} Zeichen`;
+            
+            if (length < 50) {
+                charCounter.className = 'form-text text-end text-warning';
+                charCounter.innerHTML = `<i class="fas fa-exclamation-triangle me-1"></i>${length} Zeichen (mehr Details hilfreich)`;
+            } else if (length > 500) {
+                charCounter.className = 'form-text text-end text-info';
+                charCounter.innerHTML = `<i class="fas fa-check me-1"></i>${length} Zeichen (sehr detailliert!)`;
+            } else {
+                charCounter.className = 'form-text text-end text-success';
+                charCounter.innerHTML = `<i class="fas fa-check me-1"></i>${length} Zeichen (gut!)`;
+            }
+        });
+        
+        // Trigger initial character count
+        beschreibungField.dispatchEvent(new Event('input'));
+        
+        // Test webhook function
+        window.testWebhook = async function() {
+            const testData = {
+                name: "Test User",
+                firma: "Test Company",
+                kontakt: "test@example.com",
+                link: "https://example.com",
+                beschreibung: "Dies ist ein Test der Webhook-Verbindung."
+            };
+            
+            try {
+                // Convert to URL parameters for GET request
+                const urlParams = new URLSearchParams();
+                urlParams.append('name', testData.name);
+                urlParams.append('firma', testData.firma);
+                urlParams.append('kontakt', testData.kontakt);
+                urlParams.append('link', testData.link);
+                urlParams.append('beschreibung', testData.beschreibung);
+                
+                const webhookUrl = `https://stade-001.app.n8n.cloud/webhook-test/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                
+                const response = await fetch(webhookUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${N8N_JWT_TOKEN}`
+                    },
+                    mode: 'cors'
+                });
+                
+                if (response.status >= 200 && response.status < 400) {
+                    alert('✅ Webhook Test erfolgreich! Status: ' + response.status);
+                } else if (response.status === 401 || response.status === 403) {
+                    alert('🔐 Authentifizierungsfehler: JWT Token ungültig oder abgelaufen (Status: ' + response.status + ')');
+                } else {
+                    alert('⚠️ Webhook antwortet, aber mit Status: ' + response.status);
+                }
+                
+            } catch (error) {
+                console.log('Test Error:', error);
+                
+                // Try no-cors fallback
+                try {
+                    const urlParams = new URLSearchParams();
+                    urlParams.append('name', testData.name);
+                    urlParams.append('firma', testData.firma);
+                    urlParams.append('kontakt', testData.kontakt);
+                    urlParams.append('link', testData.link);
+                    urlParams.append('beschreibung', testData.beschreibung);
+                    
+                    const webhookUrl = `https://stade-001.app.n8n.cloud/webhook-test/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                    
+                    await fetch(webhookUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${N8N_JWT_TOKEN}`
+                        },
+                        mode: 'no-cors'
+                    });
+                    alert('✅ Webhook Test (no-cors) - GET Request gesendet');
+                } catch (fallbackError) {
+                    if (error.message.includes('401') || error.message.includes('403') || error.message.includes('Authentifizierungsfehler')) {
+                        alert('🔐 Authentifizierungsfehler: JWT Token ungültig oder abgelaufen\n\nBitte:\n- JWT Token prüfen\n- Token erneuern\n- OAuth-Einstellungen in n8n überprüfen');
+                    } else {
+                        alert('❌ Webhook Test fehlgeschlagen: ' + error.message + '\n\nMögliche Lösungen:\n- JWT Token konfigurieren\n- n8n Workflow aktivieren\n- CORS in n8n konfigurieren\n- Webhook-URL prüfen');
+                    }
+                }
+            }
+        };
+    </script>
+</body>
+</html>
