@@ -41,7 +41,12 @@
 </head>
 <body>
     <div class="container py-4">
-        <h1 class="mb-4 animate__animated animate__fadeInDown">n8n Workflow Dashboard</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="animate__animated animate__fadeInDown">n8n Workflow Dashboard</h1>
+            <a href="/logout" class="btn btn-outline-danger">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+        </div>
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
                 <a class="nav-link active" href="/">Dashboard</a>
@@ -62,26 +67,21 @@
             </li>
         </ul>
         <div class="row mb-3">
-            <div class="col-md-2 stat-box animate__animated animate__fadeInLeft">
-                <div class="fw-bold">Workflows aktiv</div>
-                <div class="wf-active fs-4">{{ active_count }}</div>
+            <div class="col-md-3 stat-box animate__animated animate__fadeInLeft">
+                <div class="fw-bold">Gesamt Anfragen</div>
+                <div class="wf-active fs-4">{{ total_requests }}</div>
             </div>
-            <div class="col-md-2 stat-box animate__animated animate__fadeInLeft">
-                <div class="fw-bold">Gestoppt</div>
-                <div class="wf-inactive fs-4">{{ stopped_count }}</div>
+            <div class="col-md-3 stat-box animate__animated animate__fadeInLeft">
+                <div class="fw-bold">Hohe Priorität</div>
+                <div class="wf-error fs-4">{{ high_priority }}</div>
             </div>
-            <div class="col-md-2 stat-box animate__animated animate__fadeInLeft">
-                <div class="fw-bold">Erfolgreich</div>
-                <div class="wf-success fs-4">{{ success_count }}</div>
+            <div class="col-md-3 stat-box animate__animated animate__fadeInLeft">
+                <div class="fw-bold">Mittlere Priorität</div>
+                <div class="wf-success fs-4">{{ medium_priority }}</div>
             </div>
-            <div class="col-md-2 stat-box animate__animated animate__fadeInLeft">
-                <div class="fw-bold">Fehler</div>
-                <div class="wf-error fs-4">{{ error_count }}</div>
-            </div>
-            <div class="col-md-4 stat-box animate__animated animate__fadeInRight">
-                <div class="fw-bold">Ausführungen heute</div>
-                <div class="fs-4">{{ total_runs }}</div>
-                <canvas id="chart1" class="chart"></canvas>
+            <div class="col-md-3 stat-box animate__animated animate__fadeInLeft">
+                <div class="fw-bold">Niedrige Priorität</div>
+                <div class="wf-inactive fs-4">{{ low_priority }}</div>
             </div>
         </div>
         
@@ -145,73 +145,6 @@
                 </div>
             </div>
         </div>
-        
-        <div class="row animate__animated animate__fadeInUp">
-            {% for wf in workflows %}
-            <div class="col-md-4 mb-4">
-                <div class="card px-3 py-3">
-                    <div class="wf-name fs-5 mb-2">{{ wf.name }}</div>
-                    <div>
-                        <span class="wf-status {% if wf.status == 'success' %}wf-success{% elif wf.status == 'stopped' %}wf-stopped{% else %}wf-error{% endif %} animate__animated animate__fadeIn">
-                            {{ wf.status.capitalize() }}
-                        </span>
-                        <span class="ms-3 {% if wf.active %}wf-active{% else %}wf-inactive{% endif %}">
-                            {% if wf.active %}Aktiv{% else %}Gestoppt{% endif %}
-                        </span>
-                    </div>
-                    <div class="mt-2">Letzte Ausführung: <span class="fw-light">{{ wf.last_run }}</span></div>
-                    <div class="mt-1">Heute: <span class="fw-bold">{{ wf.runs_today }}</span> Ausführungen</div>
-                    <button class="btn btn-sm btn-toggle mt-3 {% if wf.active %}btn-danger{% else %}btn-success{% endif %}" onclick="toggleWorkflow({{ wf.id }}, this)">
-                        {% if wf.active %}Stoppen{% else %}Starten{% endif %}
-                    </button>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Demo Chart, du kannst echte Daten nutzen!
-        const ctx = document.getElementById('chart1').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['CRM', 'Newsletter', 'Slack'],
-                datasets: [{
-                    label: 'Runs',
-                    data: [{% for wf in workflows %}{{ wf.runs_today }},{% endfor %}],
-                    backgroundColor: ['#e2f7cb', '#e2e3e5', '#ffd6d6']
-                }]
-            },
-            options: {
-                plugins: {legend:{display:false}},
-                scales: {y:{beginAtZero:true}}
-            }
-        });
-
-        function toggleWorkflow(wf_id, btn) {
-            fetch("/toggle/" + wf_id, {method:"POST"})
-            .then(r => r.json())
-            .then(d => {
-                if(d.active) {
-                    btn.classList.remove("btn-success");
-                    btn.classList.add("btn-danger");
-                    btn.innerText = "Stoppen";
-                    btn.closest('.card').querySelector('.wf-status').innerText = "Success";
-                    btn.closest('.card').querySelector('.wf-status').className = "wf-status wf-success animate__animated animate__pulse";
-                    btn.closest('.card').querySelector('.wf-active').innerText = "Aktiv";
-                    btn.closest('.card').querySelector('.wf-active').className = "wf-active";
-                } else {
-                    btn.classList.remove("btn-danger");
-                    btn.classList.add("btn-success");
-                    btn.innerText = "Starten";
-                    btn.closest('.card').querySelector('.wf-status').innerText = "Stopped";
-                    btn.closest('.card').querySelector('.wf-status').className = "wf-status wf-stopped animate__animated animate__pulse";
-                    btn.closest('.card').querySelector('.wf-inactive').innerText = "Gestoppt";
-                    btn.closest('.card').querySelector('.wf-inactive').className = "wf-inactive";
-                }
-            });
-        }
-    </script>
 </body>
 </html>

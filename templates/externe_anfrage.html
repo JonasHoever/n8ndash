@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Neue Bestellanfrage</title>
+    <title>Prozess Automatisierung</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -25,69 +25,107 @@
         }
         .animate__animated {animation-duration: 1s;}
         .nav-tabs .nav-link {font-size:1.1em;}
+        .char-counter {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+        .header-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+        }
     </style>
 </head>
 <body>
     <div class="container py-4">
-        <h1 class="mb-4 animate__animated animate__fadeInDown">Neue Bestellanfrage</h1>
+        <div class="header-section animate__animated animate__fadeInDown">
+            <h1 class="mb-3">Prozess Automatisierung</h1>
+            <p class="mb-0">Beschreiben Sie Ihren Prozess und wir automatisieren ihn für Sie!</p>
+        </div>
         
         {% if success %}
             <div class="alert alert-success animate__animated animate__fadeInDown">
-                <i class="fas fa-check-circle me-2"></i>
-                <strong>Erfolgreich!</strong> Ihre Bestellanfrage wurde erfolgreich übermittelt.
+                <h4 class="alert-heading">Erfolgreich gesendet!</h4>
+                <p class="mb-0">Vielen Dank für Ihre Anfrage. Wir werden uns zeitnah bei Ihnen melden.</p>
             </div>
         {% elif error %}
             <div class="alert alert-danger animate__animated animate__fadeInDown">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <strong>Fehler!</strong> Es ist ein Fehler beim Senden aufgetreten. Bitte versuchen Sie es erneut.
+                <h4 class="alert-heading">Fehler!</h4>
+                <p class="mb-0">Es ist ein Fehler beim Senden aufgetreten. Bitte versuchen Sie es erneut.</p>
             </div>
         {% endif %}
 
         <div class="request-form animate__animated animate__fadeInUp">
-            <h3 class="mb-3">📝 Neue Bestellanfrage erstellen</h3>
-            <form method="POST">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="number" class="form-label">Nummer</label>
-                        <input type="text" class="form-control" id="number" name="number">
-                    </div>
-                </div>
+            <form method="POST" id="processForm">
                 <div class="mb-3">
-                    <label for="link" class="form-label">Link</label>
+                    <label for="name" class="form-label">Name *</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="company" class="form-label">Firma *</label>
+                    <input type="text" class="form-control" id="company" name="company" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="contact" class="form-label">Kontaktmöglichkeit *</label>
+                    <input type="text" class="form-control" id="contact" name="contact" required 
+                           placeholder="E-Mail, Telefon oder bevorzugter Kontaktweg">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="link" class="form-label">Link (optional)</label>
                     <input type="url" class="form-control" id="link" name="link" placeholder="https://...">
                 </div>
+                
                 <div class="mb-3">
-                    <label for="description" class="form-label">Beschreibung</label>
-                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                    <label for="description" class="form-label">Beschreibung des Prozesses *</label>
+                    <textarea class="form-control" id="description" name="description" rows="5" required 
+                              placeholder="Beschreiben Sie hier detailliert Ihren Prozess, den Sie automatisieren möchten..."></textarea>
+                    <div class="form-text">Je detaillierter Ihre Beschreibung, desto besser können wir Ihren Prozess verstehen und automatisieren.</div>
+                    <div class="char-counter mt-1">
+                        <span id="charCount">0</span> Zeichen <span id="helpText">(mehr Details hilfreich)</span>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="ki_description" class="form-label">KI-Beschreibung</label>
-                    <textarea class="form-control" id="ki_description" name="ki_description" rows="2" placeholder="Automatisch generierte oder KI-unterstützte Beschreibung..."></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="urgency" class="form-label">Dringlichkeit (1-10)</label>
-                    <select class="form-select" id="urgency" name="urgency">
-                        <option value="1">1 - Sehr niedrig</option>
-                        <option value="2">2 - Niedrig</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5" selected>5 - Normal</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8 - Hoch</option>
-                        <option value="9">9 - Sehr hoch</option>
-                        <option value="10">10 - Kritisch</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-success animate__animated animate__pulse">
-                    <i class="fas fa-plus"></i> Anfrage absenden
+                
+                <button type="submit" class="btn btn-success btn-lg w-100 animate__animated animate__pulse">
+                    Anfrage absenden
                 </button>
             </form>
         </div>
+        
+        <div class="text-center mt-4">
+            <small class="text-muted">
+                <i class="fas fa-shield-alt me-1"></i>
+                Ihre Daten werden sicher übertragen und vertraulich behandelt
+            </small>
+        </div>
     </div>
+
+    <script>
+        // Zeichen-Zähler für Beschreibung
+        const descriptionField = document.getElementById('description');
+        const charCount = document.getElementById('charCount');
+        const helpText = document.getElementById('helpText');
+
+        descriptionField.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = count;
+            
+            if (count < 50) {
+                helpText.textContent = '(mehr Details hilfreich)';
+                helpText.style.color = '#6c757d';
+            } else if (count < 100) {
+                helpText.textContent = '(gute Detailmenge)';
+                helpText.style.color = '#198754';
+            } else {
+                helpText.textContent = '(sehr detailliert - perfekt!)';
+                helpText.style.color = '#198754';
+            }
+        });
+    </script>
 </body>
 </html>

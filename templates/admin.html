@@ -29,7 +29,12 @@
 </head>
 <body>
     <div class="container py-4">
-        <h1 class="mb-4 animate__animated animate__fadeInDown">Admin - Workflow Requests bearbeiten</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="animate__animated animate__fadeInDown">Admin - Workflow Requests bearbeiten</h1>
+            <a href="/logout" class="btn btn-outline-danger">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+        </div>
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
                 <a class="nav-link" href="/">Dashboard</a>
@@ -104,11 +109,11 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" onclick="editRequest({{ req.id }})">
+                                    <a href="/admin/edit/{{ req.id }}" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i> Bearbeiten
-                                    </button>
+                                    </a>
                                     <button class="btn btn-sm btn-danger ms-1" onclick="deleteRequest({{ req.id }})">
-                                        <i class="fas fa-trash"></i>
+                                        <i class="fas fa-trash"></i> Löschen
                                     </button>
                                 </td>
                             </tr>
@@ -138,15 +143,25 @@
             }
         }
         
-        function editRequest(id) {
-            // TODO: Implementierung für Bearbeitung
-            alert('Bearbeitung für Anfrage ' + id + ' noch nicht implementiert');
-        }
-        
         function deleteRequest(id) {
             if (confirm('Möchten Sie diese Anfrage wirklich löschen?')) {
-                // TODO: Implementierung für Löschung
-                alert('Löschung für Anfrage ' + id + ' noch nicht implementiert');
+                fetch('/admin/delete/' + id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // Seite neu laden
+                    } else {
+                        alert('Fehler beim Löschen: ' + (data.error || 'Unbekannter Fehler'));
+                    }
+                })
+                .catch(error => {
+                    alert('Fehler beim Löschen: ' + error);
+                });
             }
         }
     </script>
