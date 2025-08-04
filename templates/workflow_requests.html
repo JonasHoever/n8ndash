@@ -7,72 +7,219 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(120deg,#f4f5f7 0%,#e9ecef 100%);
-            font-family: 'Segoe UI',sans-serif;
-        }
-        .card {
-            border-radius: 14px;
-            box-shadow: 0 2px 10px rgba(40,60,80,0.09);
-            border: none;
-        }
-        .stats-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            margin: 0;
         }
-        .animate__animated {animation-duration: 1s;}
-        .nav-tabs .nav-link {font-size:1.1em;}
+        
+        /* Modern Navbar */
+        .modern-navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand-modern {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link-modern {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+        
+        .nav-link-modern:hover {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link-modern.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white !important;
+        }
+        
+        /* Modern Cards */
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            margin-bottom: 1.5rem;
+        }
+        
+        .stats-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .animate__animated { animation-duration: 1s; }
+        
+        /* Modern Table */
+        .table {
+            background: transparent;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
         .table th {
-            background-color: #f8f9fa;
-            border-top: none;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 1rem;
+        }
+        
+        .table td {
+            padding: 1rem;
+            border-color: rgba(0, 0, 0, 0.1);
+            vertical-align: middle;
+        }
+        
+        .table tbody tr {
+            background: rgba(255, 255, 255, 0.95);
+            transition: all 0.3s ease;
+        }
+        
+        .table tbody tr:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badge-urgency {
+            font-size: 0.9rem;
+            padding: 0.6rem 1rem;
+            border-radius: 25px;
             font-weight: 600;
         }
-        .badge-urgency {
-            font-size: 0.85em;
-            padding: 0.5em 0.8em;
+        
+        /* Modern Buttons */
+        .btn-modern {
+            border-radius: 25px;
+            font-weight: 600;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Container adjustments */
+        .main-container {
+            padding: 2rem 0;
+        }
+        
+        .page-title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .description-preview {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .ki-description-preview {
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-style: italic;
+            color: #6c757d;
         }
     </style>
 </head>
 <body>
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="animate__animated animate__fadeInDown">
-                <i class="fas fa-clipboard-list me-3"></i>Bestellanfragen Übersicht
-                <small class="text-muted fs-6">Interner Bereich</small>
-            </h1>
-            <a href="/logout" class="btn btn-outline-danger">
-                <i class="fas fa-sign-out-alt me-2"></i>Logout
+    <!-- Modern Navbar -->
+    <nav class="navbar navbar-expand-lg modern-navbar">
+        <div class="container">
+            <a class="navbar-brand-modern" href="/">
+                <i class="fas fa-cube me-3" style="font-size: 1.8rem;"></i>
+                Automation Hub
             </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="color: white;">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link-modern" href="/">
+                            <i class="fas fa-home me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-modern active" href="/workflow_requests">
+                            <i class="fas fa-list-alt me-2"></i>Anfragen
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-modern" href="/admin">
+                            <i class="fas fa-cog me-2"></i>Verwaltung
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link-modern" href="/logout">
+                            <i class="fas fa-sign-out-alt me-2"></i>Abmelden
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </nav>
+    
+    <div class="container main-container">
+        <h1 class="page-title animate__animated animate__fadeInDown">
+            <i class="fas fa-clipboard-list me-3"></i>Bestellanfragen Übersicht
+        </h1>
         
-        <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="/workflow_requests">Bestellanfragen</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/prozess-anfrage">Prozess Anfrage</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin">Admin</a>
-            </li>
-        </ul>
-
         <!-- Statistik-Box -->
         <div class="stats-card animate__animated animate__fadeInLeft">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h4><i class="fas fa-chart-bar me-2"></i>Bestellanfragen Statistik</h4>
-                    <p class="mb-0">Gesamtanzahl: <strong>{{ order_requests|length }}</strong> Anfragen</p>
+                    <h3><i class="fas fa-chart-bar me-3"></i>Bestellanfragen Statistik</h3>
+                    <p class="mb-0 fs-5">Gesamtanzahl: <strong>{{ order_requests|length }}</strong> Anfragen</p>
                 </div>
                 <div class="col-md-4 text-end">
-                    <a href="/neue-anfrage" class="btn btn-light btn-lg" target="_blank">
+                    <a href="/neue-anfrage" class="btn btn-modern" style="background: rgba(255, 255, 255, 0.2); color: white;" target="_blank">
                         <i class="fas fa-external-link-alt me-2"></i>
                         Externe Seite
                     </a>
@@ -82,10 +229,10 @@
 
         <div class="row animate__animated animate__fadeInUp">
             <div class="col-12">
-                <div class="card px-3 py-3">
-                    <h4 class="mb-3">
-                        <i class="fas fa-database me-2"></i>Alle Bestellanfragen aus der Datenbank
-                    </h4>
+                <div class="card p-4">
+                    <h3 class="mb-4">
+                        <i class="fas fa-database me-3" style="color: #667eea;"></i>Alle Bestellanfragen aus der Datenbank
+                    </h3>
                     {% if order_requests %}
                         <div class="table-responsive">
                             <table class="table table-hover">
@@ -103,56 +250,44 @@
                                 <tbody>
                                     {% for req in order_requests %}
                                     <tr>
-                                        <td><span class="badge bg-primary">{{ req.id }}</span></td>
+                                        <td><span class="badge bg-primary fs-6 fw-bold">{{ req.id }}</span></td>
                                         <td class="fw-bold">{{ req.name or 'Unbekannt' }}</td>
                                         <td>
                                             {% if req.number %}
-                                                <code>{{ req.number }}</code>
+                                                <code class="bg-light p-2 rounded">{{ req.number }}</code>
                                             {% else %}
                                                 <span class="text-muted">N/A</span>
                                             {% endif %}
                                         </td>
                                         <td>
-                                            <div style="max-width: 250px;">
-                                                {{ (req.description or 'Keine Beschreibung')[:150] }}
-                                                {% if req.description and req.description|length > 150 %}
-                                                    <button class="btn btn-link btn-sm p-0" 
-                                                            onclick="toggleText('desc{{ req.id }}', this)" 
-                                                            style="font-size: 0.8em;">...mehr</button>
-                                                    <div id="desc{{ req.id }}" style="display:none;">
-                                                        <hr class="my-2">
-                                                        <small>{{ req.description }}</small>
-                                                    </div>
-                                                {% endif %}
+                                            <div class="description-preview">
+                                                {{ (req.description or 'Keine Beschreibung')[:100] }}
+                                                {% if req.description and req.description|length > 100 %}...{% endif %}
                                             </div>
                                         </td>
                                         <td>
-                                            <div style="max-width: 200px; font-style: italic;">
+                                            <div class="ki-description-preview">
                                                 {% if req.ki_description %}
-                                                    {{ req.ki_description[:100] }}
-                                                    {% if req.ki_description|length > 100 %}
-                                                        <button class="btn btn-link btn-sm p-0" 
-                                                                onclick="toggleText('ki{{ req.id }}', this)" 
-                                                                style="font-size: 0.8em;">...mehr</button>
-                                                        <div id="ki{{ req.id }}" style="display:none;">
-                                                            <hr class="my-2">
-                                                            <small>{{ req.ki_description }}</small>
-                                                        </div>
-                                                    {% endif %}
+                                                    <i class="fas fa-robot me-1"></i>{{ req.ki_description[:80] }}
+                                                    {% if req.ki_description|length > 80 %}...{% endif %}
                                                 {% else %}
-                                                    <span class="text-muted">Keine KI-Beschreibung</span>
+                                                    <span class="text-muted">Keine KI-Analyse</span>
                                                 {% endif %}
                                             </div>
                                         </td>
                                         <td>
                                             <span class="badge badge-urgency {% if req.urgency and req.urgency >= 8 %}bg-danger{% elif req.urgency and req.urgency >= 5 %}bg-warning{% else %}bg-success{% endif %}">
-                                                {{ req.urgency or 'N/A' }}
+                                                {% if req.urgency %}
+                                                    Priorität {{ req.urgency }}
+                                                {% else %}
+                                                    Normal
+                                                {% endif %}
                                             </span>
                                         </td>
                                         <td>
                                             {% if req.link %}
-                                                <a href="{{ req.link }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-external-link-alt"></i> Öffnen
+                                                <a href="{{ req.link }}" target="_blank" class="btn btn-sm btn-modern btn-outline-primary">
+                                                    <i class="fas fa-external-link-alt me-1"></i>Öffnen
                                                 </a>
                                             {% else %}
                                                 <span class="text-muted">Kein Link</span>
@@ -165,10 +300,12 @@
                         </div>
                     {% else %}
                         <div class="text-center py-5">
-                            <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
-                            <h4 class="text-muted">Noch keine Bestellanfragen vorhanden</h4>
-                            <p class="text-muted mb-4">Es sind noch keine Anfragen in der Datenbank gespeichert.</p>
-                            <a href="/neue-anfrage" class="btn btn-primary" target="_blank">
+                            <div style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem;">
+                                <i class="fas fa-inbox fa-2x" style="color: white;"></i>
+                            </div>
+                            <h4 style="color: #667eea; font-weight: 600;">Noch keine Anfragen vorhanden</h4>
+                            <p class="text-muted mb-4">Das System wartet auf neue Automatisierungsanfragen.</p>
+                            <a href="/neue-anfrage" class="btn btn-modern" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;" target="_blank">
                                 <i class="fas fa-plus me-2"></i>Erste Anfrage über externe Seite erstellen
                             </a>
                         </div>
@@ -178,26 +315,9 @@
         </div>
 
         <div class="text-center mt-4">
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle me-2"></i>
-                <strong>Tipp:</strong> Die externe Seite unter 
-                <a href="/neue-anfrage" target="_blank" class="alert-link">/neue-anfrage</a> 
-                kann an Kunden weitergegeben werden.
-            </div>
         </div>
     </div>
 
-    <script>
-        function toggleText(elementId, button) {
-            const element = document.getElementById(elementId);
-            if (element.style.display === 'none') {
-                element.style.display = 'block';
-                button.innerText = '...weniger';
-            } else {
-                element.style.display = 'none';
-                button.innerText = '...mehr';
-            }
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

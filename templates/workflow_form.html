@@ -12,6 +12,37 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Matrix Background Animation */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+        
+        .code-line {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #ffffff;
+            white-space: nowrap;
+            animation: scroll-code 20s linear infinite;
+        }
+        
+        @keyframes scroll-code {
+            0% { transform: translateX(-100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateX(100vw); opacity: 0; }
         }
         
         .form-container {
@@ -20,6 +51,8 @@
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 10;
         }
         
         .form-control, .form-select {
@@ -143,6 +176,9 @@
     </style>
 </head>
 <body>
+    <!-- Matrix Background Animation -->
+    <div class="matrix-bg" id="matrix-background"></div>
+    
     <div class="floating-shapes">
         <div class="shape">
             <i class="fas fa-cog fa-3x"></i>
@@ -274,7 +310,6 @@
         </div>
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         /**
          * JWT Token Konfiguration für n8n OAuth
@@ -329,7 +364,7 @@
             };
             
             try {
-                // Convert form data to URL parameters for GET request
+                // Erste Methode: CORS mit Authorization Header
                 const urlParams = new URLSearchParams();
                 urlParams.append('name', formData.name);
                 urlParams.append('firma', formData.firma);
@@ -337,8 +372,9 @@
                 urlParams.append('link', formData.link);
                 urlParams.append('beschreibung', formData.beschreibung);
                 
-                // Send to n8n webhook as GET request with URL parameters
                 const webhookUrl = `https://stade-001.app.n8n.cloud/webhook-test/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                
+                console.log('Versuche API-Aufruf mit CORS...', webhookUrl);
                 
                 const response = await fetch(webhookUrl, {
                     method: 'GET',
@@ -349,18 +385,16 @@
                     mode: 'cors'
                 });
                 
-                // Success if response is OK or if we get any response (n8n might not return perfect status codes)
+                console.log('API Response Status:', response.status);
+                
                 if (response.status >= 200 && response.status < 400) {
                     // Success
+                    console.log('API-Aufruf erfolgreich!');
                     successMessage.style.display = 'block';
                     e.target.reset(); // Clear form
-                    
-                    // Scroll to success message
                     successMessage.scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Add success animation to form
                     document.querySelector('.form-container').classList.add('animate__animated', 'animate__pulse');
-                    
+                    return; // Beende hier erfolgreich
                 } else if (response.status === 401 || response.status === 403) {
                     throw new Error(`Authentifizierungsfehler (${response.status}): JWT Token ungültig oder abgelaufen`);
                 } else {
@@ -368,12 +402,44 @@
                 }
                 
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Erster Versuch fehlgeschlagen:', error);
                 
-                // Try alternative method if CORS fails
-                if (error.message.includes('CORS') || error.message.includes('network')) {
+                // Zweiter Versuch: No-CORS Fallback
+                try {
+                    console.log('Versuche Fallback mit no-cors...');
+                    
+                    const urlParams = new URLSearchParams();
+                    urlParams.append('name', formData.name);
+                    urlParams.append('firma', formData.firma);
+                    urlParams.append('kontakt', formData.kontakt);
+                    urlParams.append('link', formData.link);
+                    urlParams.append('beschreibung', formData.beschreibung);
+                    
+                    const webhookUrl = `https://stade-001.app.n8n.cloud/webhook-test/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                    
+                    await fetch(webhookUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${N8N_JWT_TOKEN}`
+                        },
+                        mode: 'no-cors'
+                    });
+                    
+                    console.log('No-CORS Fallback gesendet');
+                    // Bei no-cors können wir den Status nicht prüfen, also nehmen wir an, dass es erfolgreich war
+                    successMessage.style.display = 'block';
+                    e.target.reset();
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                    document.querySelector('.form-container').classList.add('animate__animated', 'animate__pulse');
+                    return; // Beende hier erfolgreich
+                    
+                } catch (fallbackError) {
+                    console.error('Auch Fallback fehlgeschlagen:', fallbackError);
+                    
+                    // Dritter Versuch: iframe-Methode
                     try {
-                        // Fallback: try with no-cors mode (fire and forget)
+                        console.log('Versuche iframe-Methode...');
+                        
                         const urlParams = new URLSearchParams();
                         urlParams.append('name', formData.name);
                         urlParams.append('firma', formData.firma);
@@ -383,61 +449,59 @@
                         
                         const webhookUrl = `https://stade-001.app.n8n.cloud/webhook-test/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
                         
-                        await fetch(webhookUrl, {
-                            method: 'GET',
-                            headers: {
-                                'Authorization': `Bearer ${N8N_JWT_TOKEN}`
-                            },
-                            mode: 'no-cors'
-                        });
+                        // Erstelle ein unsichtbares iframe für den Request
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = webhookUrl;
+                        document.body.appendChild(iframe);
                         
-                        // If no error thrown, assume success
-                        successMessage.style.display = 'block';
-                        e.target.reset();
-                        successMessage.scrollIntoView({ behavior: 'smooth' });
-                        document.querySelector('.form-container').classList.add('animate__animated', 'animate__pulse');
+                        // Nach 2 Sekunden als erfolgreich betrachten und iframe entfernen
+                        setTimeout(() => {
+                            document.body.removeChild(iframe);
+                            console.log('iframe-Methode abgeschlossen');
+                            successMessage.style.display = 'block';
+                            e.target.reset();
+                            successMessage.scrollIntoView({ behavior: 'smooth' });
+                            document.querySelector('.form-container').classList.add('animate__animated', 'animate__pulse');
+                        }, 2000);
                         
-                    } catch (fallbackError) {
-                        console.error('Fallback error:', fallbackError);
+                        return; // Beende hier
+                        
+                    } catch (iframeError) {
+                        console.error('Alle Methoden fehlgeschlagen:', iframeError);
+                        
+                        // Zeige detaillierte Fehlermeldung mit manueller Option
                         errorMessage.style.display = 'block';
+                        
+                        const urlParams = new URLSearchParams();
+                        urlParams.append('name', formData.name);
+                        urlParams.append('firma', formData.firma);
+                        urlParams.append('kontakt', formData.kontakt);
+                        urlParams.append('link', formData.link);
+                        urlParams.append('beschreibung', formData.beschreibung);
+                        
+                        const manualUrl = `https://stade-001.app.n8n.cloud/webhook-test/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                        
                         errorMessage.innerHTML = `
-                            <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
-                            <h4>Verbindungsproblem</h4>
-                            <p class="mb-2">Die Daten konnten nicht übertragen werden. Mögliche Ursachen:</p>
-                            <ul class="text-start">
-                                <li>Webhook-URL ist nicht erreichbar</li>
-                                <li>CORS-Einstellungen in n8n prüfen</li>
-                                <li>Internetverbindung prüfen</li>
-                            </ul>
-                            <p class="mb-0">Bitte kontaktieren Sie uns direkt oder versuchen Sie es später erneut.</p>
+                            <div class="alert alert-warning animate__animated animate__fadeIn">
+                                <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                                <h4>Automatische Übertragung fehlgeschlagen</h4>
+                                <p class="mb-2">Die Daten konnten nicht automatisch übertragen werden. Mögliche Ursachen:</p>
+                                <ul class="text-start mb-3">
+                                    <li>Browser-Sicherheitseinstellungen (CORS)</li>
+                                    <li>Netzwerk-Verbindungsprobleme</li>
+                                    <li>Firewall oder Proxy-Einstellungen</li>
+                                </ul>
+                                <div class="d-grid gap-2">
+                                    <a href="${manualUrl}" target="_blank" class="btn btn-primary">
+                                        <i class="fas fa-external-link-alt me-2"></i>Daten manuell übertragen
+                                    </a>
+                                    <small class="text-muted">Der Link öffnet sich in einem neuen Tab und überträgt Ihre Daten direkt.</small>
+                                </div>
+                            </div>
                         `;
                         errorMessage.scrollIntoView({ behavior: 'smooth' });
                     }
-                } else {
-                    errorMessage.style.display = 'block';
-                    
-                    // Spezielle Behandlung für JWT/Auth Fehler
-                    if (error.message.includes('Authentifizierungsfehler') || error.message.includes('401') || error.message.includes('403')) {
-                        errorMessage.innerHTML = `
-                            <i class="fas fa-key fa-2x mb-2"></i>
-                            <h4>Authentifizierungsfehler</h4>
-                            <p class="mb-2">JWT Token ist ungültig oder abgelaufen. Bitte:</p>
-                            <ul class="text-start">
-                                <li>JWT Token in der Konfiguration prüfen</li>
-                                <li>Token ggf. erneuern</li>
-                                <li>OAuth-Einstellungen in n8n überprüfen</li>
-                            </ul>
-                            <p class="mb-0">Kontaktieren Sie den Administrator für einen neuen Token.</p>
-                        `;
-                    } else {
-                        errorMessage.innerHTML = `
-                            <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
-                            <h4>Fehler beim Senden</h4>
-                            <p class="mb-0">Fehlerdetails: ${error.message}</p>
-                            <p class="mb-0">Bitte versuchen Sie es erneut oder kontaktieren Sie uns direkt.</p>
-                        `;
-                    }
-                    errorMessage.scrollIntoView({ behavior: 'smooth' });
                 }
             } finally {
                 // Reset button state
@@ -494,6 +558,8 @@
             };
             
             try {
+                console.log('Starte Webhook-Test...');
+                
                 // Convert to URL parameters for GET request
                 const urlParams = new URLSearchParams();
                 urlParams.append('name', testData.name);
@@ -513,19 +579,23 @@
                     mode: 'cors'
                 });
                 
+                console.log('Test Response Status:', response.status);
+                
                 if (response.status >= 200 && response.status < 400) {
-                    alert('✅ Webhook Test erfolgreich! Status: ' + response.status);
+                    alert('✅ Webhook Test erfolgreich! Status: ' + response.status + '\n\nDie Webhook-Verbindung funktioniert korrekt.');
                 } else if (response.status === 401 || response.status === 403) {
-                    alert('🔐 Authentifizierungsfehler: JWT Token ungültig oder abgelaufen (Status: ' + response.status + ')');
+                    alert('🔐 Authentifizierungsfehler: JWT Token ungültig oder abgelaufen (Status: ' + response.status + ')\n\nBitte kontaktieren Sie den Administrator.');
                 } else {
-                    alert('⚠️ Webhook antwortet, aber mit Status: ' + response.status);
+                    alert('⚠️ Webhook antwortet, aber mit unerwarteter Status: ' + response.status + '\n\nBitte prüfen Sie die n8n Workflow-Konfiguration.');
                 }
                 
             } catch (error) {
                 console.log('Test Error:', error);
                 
-                // Try no-cors fallback
+                // Versuche no-cors fallback
                 try {
+                    console.log('Versuche Test-Fallback...');
+                    
                     const urlParams = new URLSearchParams();
                     urlParams.append('name', testData.name);
                     urlParams.append('firma', testData.firma);
@@ -542,16 +612,72 @@
                         },
                         mode: 'no-cors'
                     });
-                    alert('✅ Webhook Test (no-cors) - GET Request gesendet');
+                    alert('✅ Webhook Test (Fallback-Modus) - GET Request wurde gesendet\n\nDa CORS blockiert ist, können wir den Status nicht prüfen,\naber der Request wurde an die API gesendet.');
+                    
                 } catch (fallbackError) {
-                    if (error.message.includes('401') || error.message.includes('403') || error.message.includes('Authentifizierungsfehler')) {
-                        alert('🔐 Authentifizierungsfehler: JWT Token ungültig oder abgelaufen\n\nBitte:\n- JWT Token prüfen\n- Token erneuern\n- OAuth-Einstellungen in n8n überprüfen');
-                    } else {
-                        alert('❌ Webhook Test fehlgeschlagen: ' + error.message + '\n\nMögliche Lösungen:\n- JWT Token konfigurieren\n- n8n Workflow aktivieren\n- CORS in n8n konfigurieren\n- Webhook-URL prüfen');
+                    console.error('Test komplett fehlgeschlagen:', fallbackError);
+                    
+                    const urlParams = new URLSearchParams();
+                    urlParams.append('name', testData.name);
+                    urlParams.append('firma', testData.firma);
+                    urlParams.append('kontakt', testData.kontakt);
+                    urlParams.append('link', testData.link);
+                    urlParams.append('beschreibung', testData.beschreibung);
+                    
+                    const manualUrl = `https://stade-001.app.n8n.cloud/webhook-test/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                    
+                    if (confirm('❌ Automatischer Webhook-Test fehlgeschlagen\n\nMögliche Ursachen:\n- CORS-Blockierung durch Browser\n- Netzwerk-Probleme\n- Firewall-Einstellungen\n\n✅ Soll der Test-Link in einem neuen Tab geöffnet werden?')) {
+                        window.open(manualUrl, '_blank');
                     }
                 }
             }
         };
+        
+        // Matrix Background Animation
+        function initMatrixBackground() {
+            const matrixBg = document.getElementById('matrix-background');
+            if (!matrixBg) return;
+            
+            const codeSnippets = [
+                'workflow.trigger("customer_request", payload);',
+                'process.automation.execute(requestData);',
+                'await database.orders.create(newOrder);',
+                'notification.send(admin, "New process request");',
+                'validator.check(formData) ? approve() : reject();',
+                'const priority = calculateUrgency(description);',
+                'logger.info(`Processing request ID: ${requestId}`);',
+                'emailService.notify(customer, "Request received");',
+                'queue.push({type: "process", data: formData});'
+            ];
+            
+            function createCodeLine() {
+                const codeLine = document.createElement('div');
+                codeLine.className = 'code-line';
+                codeLine.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                codeLine.style.top = Math.random() * 100 + '%';
+                codeLine.style.animationDelay = Math.random() * 3 + 's';
+                
+                matrixBg.appendChild(codeLine);
+                
+                setTimeout(() => {
+                    if (codeLine.parentNode) {
+                        codeLine.parentNode.removeChild(codeLine);
+                    }
+                }, 20000);
+            }
+            
+            // Initial code lines
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createCodeLine, i * 800);
+            }
+            
+            // Continuous code generation
+            setInterval(createCodeLine, 2500);
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initMatrixBackground);
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

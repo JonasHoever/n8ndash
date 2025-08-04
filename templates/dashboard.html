@@ -6,145 +6,668 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(120deg,#f4f5f7 0%,#e9ecef 100%);
-            font-family: 'Segoe UI',sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            margin: 0;
         }
+        
+        /* Modern Navbar */
+        .modern-navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand-modern {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link-modern {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            margin: 0 0.25rem;
+        }
+        
+        .nav-link-modern:hover {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link-modern.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white !important;
+        }
+        
+        /* Modern Cards */
         .card {
-            border-radius: 14px;
-            box-shadow: 0 2px 10px rgba(40,60,80,0.09);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
         }
+        
         .stat-box {
-            background: #fff;
-            border-radius: 10px;
-            padding: 1.2rem 1.2rem 0.1rem 1.2rem;
-            margin-bottom: 1.1rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+            text-align: center;
         }
-        .wf-status {
-            font-size: 0.99em;
-            padding: 3px 10px;
-            border-radius: 8px;
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
-        .wf-success {background: #e2f7cb; color: #2d7c0b;}
-        .wf-stopped {background: #e2e3e5; color: #636363;}
-        .wf-error {background: #ffd6d6; color: #bb2525;}
-        .wf-active {color:#2d7c0b;}
-        .wf-inactive {color:#636363;}
-        .btn-toggle {border-radius: 6px;}
-        .animate__animated {animation-duration: 1s;}
-        .chart {height: 70px;}
-        .wf-name {font-weight: 500;}
-        .nav-tabs .nav-link {font-size:1.1em;}
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Status Colors */
+        .wf-success { background: linear-gradient(135deg, #28a745, #20c997); color: white; }
+        .wf-stopped { background: linear-gradient(135deg, #6c757d, #495057); color: white; }
+        .wf-error { background: linear-gradient(135deg, #dc3545, #c82333); color: white; }
+        .wf-active { color: #28a745; }
+        .wf-inactive { color: #6c757d; }
+        
+        .animate__animated { animation-duration: 1s; }
+        
+        /* Modern Request Items */
+        .request-item {
+            border: none;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        
+        .request-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .request-summary {
+            padding: 1.5rem;
+            background: transparent;
+        }
+        
+        .ki-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .ki-description-preview {
+            color: #495057;
+        }
+        
+        .ki-description-full {
+            color: #343a40;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            border-left: 4px solid #667eea;
+            white-space: pre-line;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .request-details {
+            display: none;
+            padding: 0 1.5rem 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 1rem;
+            background: rgba(248, 249, 250, 0.8);
+        }
+        
+        .request-details.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 1000px;
+                padding-top: 1.5rem;
+                padding-bottom: 1.5rem;
+            }
+        }
+        
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            color: #667eea;
+        }
+        
+        .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+        
+        .urgency-badge {
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+        
+        .request-id {
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+        }
+        
+        /* Status Indicators */
+        .status-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-healthy {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        
+        .status-warning {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+        }
+        
+        .status-error {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+        
+        .status-loading {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        /* Modern Buttons */
+        .btn-modern {
+            border-radius: 25px;
+            font-weight: 600;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Container adjustments */
+        .main-container {
+            padding: 2rem 0;
+        }
+        
+        .page-title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        /* Hacker-Style Background Code Animation */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        
+        .code-line {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #28a745;
+            white-space: nowrap;
+            animation: scroll-code 25s linear infinite;
+        }
+        
+        @keyframes scroll-code {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+        }
+        
+        .code-line:nth-child(odd) {
+            color: #007bff;
+            animation-duration: 20s;
+        }
+        
+        .code-line:nth-child(3n) {
+            color: #6f42c1;
+            animation-duration: 30s;
+        }
+        
+        /* Prominent Process Request Button */
+        .process-request-highlight {
+            background: linear-gradient(45deg, #28a745, #20c997) !important;
+            color: white !important;
+            font-weight: 600 !important;
+            border: 2px solid #20c997 !important;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
+            animation: pulse-green 2s infinite !important;
+            position: relative !important;
+        }
+        
+        .process-request-highlight::before {
+            content: '🚀 ';
+            font-size: 1.2em;
+        }
+        
+        .process-request-highlight:hover {
+            background: linear-gradient(45deg, #20c997, #28a745) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4) !important;
+        }
+        
+        @keyframes pulse-green {
+            0% { box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(40, 167, 69, 0.5); }
+            100% { box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); }
+        }
+        
+        /* Hide Admin Link */
+        .admin-hidden {
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+            font-size: 0.9em;
+        }
+        
+        .admin-hidden:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="animate__animated animate__fadeInDown">n8n Workflow Dashboard</h1>
-            <a href="/logout" class="btn btn-outline-danger">
-                <i class="fas fa-sign-out-alt me-2"></i>Logout
+    <!-- Matrix/Hacker Background Animation -->
+    <div class="matrix-bg" id="matrix-background"></div>
+    
+    <!-- Modern Navbar -->
+    <nav class="navbar navbar-expand-lg modern-navbar">
+        <div class="container">
+            <a class="navbar-brand-modern" href="/">
+                <i class="fas fa-cube me-3" style="font-size: 1.8rem;"></i>
+                Automation Hub
             </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="color: white;">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link-modern active" href="/">
+                            <i class="fas fa-home me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-modern" href="/workflow_requests">
+                            <i class="fas fa-list-alt me-2"></i>Anfragen
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-modern" href="/admin">
+                            <i class="fas fa-cog me-2"></i>Verwaltung
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link-modern" href="/logout">
+                            <i class="fas fa-sign-out-alt me-2"></i>Abmelden
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-                <a class="nav-link active" href="/">Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/workflow_requests">Bestellanfragen (Intern)</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/neue-anfrage" target="_blank">
-                    <i class="fas fa-external-link-alt me-1"></i>Neue Anfrage (Extern)
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/prozess-anfrage">Prozess Anfrage</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin">Admin</a>
-            </li>
-        </ul>
-        <div class="row mb-3">
-            <div class="col-md-3 stat-box animate__animated animate__fadeInLeft">
-                <div class="fw-bold">Gesamt Anfragen</div>
-                <div class="wf-active fs-4">{{ total_requests }}</div>
+    </nav>
+    
+    <div class="container main-container">
+        <h1 class="page-title animate__animated animate__fadeInDown">
+            <i class="fas fa-chart-line me-3"></i>Analytics Dashboard
+        </h1>
+        
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+                    <i class="fas fa-inbox fa-2x mb-3" style="color: #667eea;"></i>
+                    <div class="stat-label">Gesamt Anfragen</div>
+                    <div class="stat-number wf-active">{{ total_requests }}</div>
+                </div>
             </div>
-            <div class="col-md-3 stat-box animate__animated animate__fadeInLeft">
-                <div class="fw-bold">Hohe Priorität</div>
-                <div class="wf-error fs-4">{{ high_priority }}</div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                    <i class="fas fa-exclamation-triangle fa-2x mb-3" style="color: #dc3545;"></i>
+                    <div class="stat-label">Hohe Priorität</div>
+                    <div class="stat-number wf-error">{{ high_priority }}</div>
+                </div>
             </div>
-            <div class="col-md-3 stat-box animate__animated animate__fadeInLeft">
-                <div class="fw-bold">Mittlere Priorität</div>
-                <div class="wf-success fs-4">{{ medium_priority }}</div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+                    <i class="fas fa-clock fa-2x mb-3" style="color: #ffc107;"></i>
+                    <div class="stat-label">Mittlere Priorität</div>
+                    <div class="stat-number" style="color: #ffc107;">{{ medium_priority }}</div>
+                </div>
             </div>
-            <div class="col-md-3 stat-box animate__animated animate__fadeInLeft">
-                <div class="fw-bold">Niedrige Priorität</div>
-                <div class="wf-inactive fs-4">{{ low_priority }}</div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-box animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                    <i class="fas fa-check-circle fa-2x mb-3" style="color: #28a745;"></i>
+                    <div class="stat-label">Niedrige Priorität</div>
+                    <div class="stat-number wf-success">{{ low_priority }}</div>
+                </div>
             </div>
         </div>
         
-        <!-- Neue Sektion für Bestellanfragen aus der Datenbank -->
+        <!-- Moderne Anfragen-Übersicht -->
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card px-3 py-3 animate__animated animate__fadeInUp">
-                    <h4 class="mb-3">📋 Aktuelle Bestellanfragen</h4>
-                    {% if order_requests %}
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Nummer</th>
-                                        <th>Beschreibung</th>
-                                        <th>Dringlichkeit</th>
-                                        <th>Link</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for req in order_requests[:5] %}
-                                    <tr>
-                                        <td><span class="badge bg-primary">{{ req.id }}</span></td>
-                                        <td class="fw-bold">{{ req.name or 'Unbekannt' }}</td>
-                                        <td>{{ req.number or 'N/A' }}</td>
-                                        <td>
-                                            <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
-                                                {{ (req.description or 'Keine Beschreibung')[:100] }}{% if req.description and req.description|length > 100 %}...{% endif %}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="badge {% if req.urgency and req.urgency >= 8 %}bg-danger{% elif req.urgency and req.urgency >= 5 %}bg-warning{% else %}bg-success{% endif %}">
-                                                {{ req.urgency or 'N/A' }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {% if req.link %}
-                                                <a href="{{ req.link }}" target="_blank" class="btn btn-sm btn-outline-primary">🔗 Link</a>
-                                            {% else %}
-                                                <span class="text-muted">Kein Link</span>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                <div class="card p-4 animate__animated animate__fadeInUp" style="animation-delay: 0.5s;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="mb-0">
+                            <i class="fas fa-tasks me-3" style="color: #667eea;"></i>
+                            Aktuelle Anfragen
+                        </h3>
+                        <div class="d-flex align-items-center">
+                            <div id="db-status-indicator" class="status-indicator status-loading me-3"></div>
+                            <span id="db-status-text" class="text-muted me-3">System wird geprüft...</span>
+                            <button onclick="checkDatabaseStatus()" class="btn btn-outline-primary btn-sm btn-modern">
+                                <i class="fas fa-sync-alt me-1"></i>Aktualisieren
+                            </button>
                         </div>
-                        {% if order_requests|length > 5 %}
-                            <div class="text-center mt-3">
-                                <a href="/workflow_requests" class="btn btn-outline-primary">Alle {{ order_requests|length }} Anfragen anzeigen</a>
+                    </div>
+                    {% if order_requests %}
+                        <div class="request-list">
+                            {% for req in order_requests[:10] %}
+                            <div class="request-item" data-request-id="{{ req.id }}" onclick="toggleRequestDetails({{ req.id }})">
+                                <!-- Kompakte Ansicht (immer sichtbar) -->
+                                <div class="request-summary">
+                                    <div class="row align-items-center">
+                                        <div class="col-1">
+                                            <span class="badge bg-primary request-id">{{ req.id }}</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <div class="ki-description ki-description-preview">
+                                                {% if req.ki_description %}
+                                                    <i class="fas fa-robot me-2 text-info"></i>
+                                                    {{ req.ki_description[:120] }}
+                                                    {% if req.ki_description|length > 120 %}...{% endif %}
+                                                {% else %}
+                                                    <i class="fas fa-user me-2 text-muted"></i>
+                                                    <span class="text-muted">{{ req.name or 'Unbekannter Benutzer' }}</span>
+                                                    {% if req.description %}
+                                                        <br><small class="text-muted">{{ req.description[:80] }}{% if req.description|length > 80 %}...{% endif %}</small>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <span class="badge urgency-badge {% if req.urgency and req.urgency >= 8 %}bg-danger{% elif req.urgency and req.urgency >= 5 %}bg-warning{% else %}bg-success{% endif %}">
+                                                {% if req.urgency %}
+                                                    Priorität {{ req.urgency }}
+                                                {% else %}
+                                                    Normal
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        <div class="col-2 text-end">
+                                            <i class="fas fa-chevron-down toggle-icon" id="toggle-{{ req.id }}" style="font-size: 1.2rem; cursor: pointer;"></i>
+                                            <small class="text-muted ms-2">
+                                                {% if req.link %}
+                                                    <i class="fas fa-link me-1"></i>Mit Link
+                                                {% else %}
+                                                    <i class="fas fa-file-text me-1"></i>Text
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Ausklappbare Details -->
+                                <div class="request-details" id="details-{{ req.id }}">
+                                    {% if req.ki_description %}
+                                        <div class="ki-description-full">
+                                            <h6 class="text-primary mb-3">
+                                                <i class="fas fa-robot me-2"></i>KI-Analyse der Anfrage:
+                                            </h6>
+                                            {{ req.ki_description }}
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if req.description %}
+                                        <div class="mt-3">
+                                            <h6 class="text-secondary mb-2">
+                                                <i class="fas fa-file-text me-2"></i>Ursprüngliche Beschreibung:
+                                            </h6>
+                                            <div style="background: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 8px; white-space: pre-line; font-size: 0.9rem;">{{ req.description }}</div>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="row mt-3">
+                                        {% if req.name %}
+                                        <div class="col-md-6">
+                                            <h6 class="text-secondary mb-2">
+                                                <i class="fas fa-user me-2"></i>Kontakt:
+                                            </h6>
+                                            <p class="mb-1"><strong>{{ req.name }}</strong></p>
+                                            {% if req.number %}
+                                                <p class="mb-0 text-muted"><i class="fas fa-phone me-1"></i>{{ req.number }}</p>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                        
+                                        {% if req.link %}
+                                        <div class="col-md-6">
+                                            <h6 class="text-secondary mb-2">
+                                                <i class="fas fa-link me-2"></i>Referenz:
+                                            </h6>
+                                            <a href="{{ req.link }}" target="_blank" class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-external-link-alt me-1"></i>Link öffnen
+                                            </a>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if order_requests|length > 10 %}
+                            <div class="text-center mt-4">
+                                <p class="text-muted">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Es werden die neuesten 10 Anfragen angezeigt.
+                                </p>
                             </div>
                         {% endif %}
                     {% else %}
-                        <div class="text-center text-muted py-4">
-                            <i class="fas fa-inbox fa-3x mb-3"></i>
-                            <p>Keine Bestellanfragen vorhanden</p>
+                        <div class="text-center py-5">
+                            <div style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem;">
+                                <i class="fas fa-inbox fa-2x" style="color: white;"></i>
+                            </div>
+                            <h4 style="color: #667eea; font-weight: 600;">Noch keine Anfragen vorhanden</h4>
+                            <p class="text-muted mb-4">Stellen Sie Ihre erste Automatisierungsanfrage und wir helfen Ihnen bei der Umsetzung.</p>
+                            <a href="/neue-anfrage" class="btn btn-modern" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;" target="_blank">
+                                <i class="fas fa-plus me-2"></i>Jetzt Anfrage stellen
+                            </a>
                         </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Datenbank-Status prüfen
+        async function checkDatabaseStatus() {
+            const statusIndicator = document.getElementById('db-status-indicator');
+            const statusText = document.getElementById('db-status-text');
+            
+            // Loading-Status setzen
+            statusIndicator.className = 'status-indicator status-loading';
+            statusText.textContent = 'Wird geprüft...';
+            
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                // Status basierend auf Response setzen
+                if (response.status === 200) {
+                    statusIndicator.className = 'status-indicator status-healthy';
+                    statusText.textContent = `${data.message} (Pool: ${data.pool_size})`;
+                } else if (response.status === 206) {
+                    statusIndicator.className = 'status-indicator status-warning';
+                    statusText.textContent = data.message;
+                } else {
+                    statusIndicator.className = 'status-indicator status-error';
+                    statusText.textContent = data.message;
+                }
+            } catch (error) {
+                statusIndicator.className = 'status-indicator status-error';
+                statusText.textContent = 'Verbindung fehlgeschlagen';
+                console.error('Health Check Error:', error);
+            }
+        }
+        
+        // Status beim Laden der Seite prüfen
+        document.addEventListener('DOMContentLoaded', function() {
+            checkDatabaseStatus();
+            initMatrixBackground();
+            
+            // Status alle 30 Sekunden automatisch prüfen
+            setInterval(checkDatabaseStatus, 30000);
+        });
+        
+        // Toggle Request Details Funktion
+        function toggleRequestDetails(requestId) {
+            const detailsElement = document.getElementById('details-' + requestId);
+            const toggleIcon = document.getElementById('toggle-' + requestId);
+            
+            if (detailsElement.classList.contains('show')) {
+                // Zuklappen
+                detailsElement.classList.remove('show');
+                toggleIcon.classList.remove('rotated');
+            } else {
+                // Aufklappen
+                detailsElement.classList.add('show');
+                toggleIcon.classList.add('rotated');
+            }
+        }
+        
+        // Matrix/Hacker Background Animation
+        function initMatrixBackground() {
+            const matrixBg = document.getElementById('matrix-background');
+            
+            const codeSnippets = [
+                'if (workflow.status === "active") { execute(); }',
+                'const result = await n8n.trigger("webhook", data);',
+                'database.query("SELECT * FROM orders WHERE status = ?", ["pending"]);',
+                'automation.schedule("0 9 * * 1-5", processOrders);',
+                'response.status(200).json({success: true, processed: count});',
+                'for(let i = 0; i < workflows.length; i++) { workflows[i].run(); }',
+                'const config = { apiKey: process.env.API_KEY, timeout: 5000 };',
+                'webhooks.forEach(hook => hook.execute(payload));',
+                'logger.info(`Processing ${requests.length} automation requests`);',
+                'await redis.set(`cache:${id}`, JSON.stringify(data), "EX", 3600);',
+                'const pipeline = new Pipeline([validateData, processData, saveData]);',
+                'socket.emit("automation:complete", {id, status: "success"});',
+                'crypto.randomBytes(32).toString("hex");',
+                'jwt.sign({userId, role}, secret, {expiresIn: "24h"});',
+                'queue.add("process-order", {orderId, priority: "high"});'
+            ];
+            
+            function createCodeLine() {
+                const codeLine = document.createElement('div');
+                codeLine.className = 'code-line';
+                codeLine.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                codeLine.style.top = Math.random() * 100 + '%';
+                codeLine.style.animationDelay = Math.random() * 5 + 's';
+                codeLine.style.animationDuration = (15 + Math.random() * 15) + 's';
+                
+                matrixBg.appendChild(codeLine);
+                
+                // Entferne Element nach Animation
+                setTimeout(() => {
+                    if (codeLine.parentNode) {
+                        codeLine.parentNode.removeChild(codeLine);
+                    }
+                }, 30000);
+            }
+            
+            // Erstelle initial einige Code-Zeilen
+            for (let i = 0; i < 8; i++) {
+                setTimeout(createCodeLine, i * 1000);
+            }
+            
+            // Erstelle kontinuierlich neue Code-Zeilen
+            setInterval(createCodeLine, 3000);
+        }
+    </script>
 </body>
 </html>

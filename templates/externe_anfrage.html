@@ -2,110 +2,484 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Prozess Automatisierung</title>
+    <title>Automatisierungsanfrage - Ihr Prozess wird automatisiert</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(120deg,#f4f5f7 0%,#e9ecef 100%);
-            font-family: 'Segoe UI',sans-serif;
-        }
-        .card {
-            border-radius: 14px;
-            box-shadow: 0 2px 10px rgba(40,60,80,0.09);
-            border: none;
-        }
-        .request-form {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(40,60,80,0.09);
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-        .animate__animated {animation-duration: 1s;}
-        .nav-tabs .nav-link {font-size:1.1em;}
-        .char-counter {
-            font-size: 0.875rem;
-            color: #6c757d;
-        }
-        .header-section {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            overflow-x: hidden;
+        }
+        
+        .customer-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            width: 100%;
+        }
+        
+        .customer-header {
+            text-align: center;
             color: white;
-            border-radius: 12px;
+            margin-bottom: 2rem;
+            padding: 1rem 0;
+        }
+        
+        .customer-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            word-wrap: break-word;
+        }
+        
+        .customer-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin: 0;
+            word-wrap: break-word;
+        }
+        
+        .header-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            display: block;
+            width: 100%;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+            width: 100%;
+        }
+        
+        .form-control {
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            width: 100%;
+            box-sizing: border-box;
+            /* Better touch targets */
+            min-height: 48px;
+            touch-action: manipulation;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            background: white;
+            outline: none;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 1.2rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            width: 100%;
+            /* Better touch targets */
+            min-height: 48px;
+            touch-action: manipulation;
+            cursor: pointer;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .char-counter {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+        
+        .form-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+        
+        .alert {
+            border-radius: 15px;
+            border: none;
+            padding: 1.5rem;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+        }
+        
+        .privacy-notice {
+            text-align: center;
+            margin-top: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+        }
+        
+        .privacy-notice i {
+            color: #28a745;
+            margin-right: 0.5rem;
+        }
+        
+        /* Matrix Background Animation */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        
+        .code-line {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #28a745;
+            white-space: nowrap;
+            animation: scroll-code 25s linear infinite;
+        }
+        
+        @keyframes scroll-code {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive Design for Mobile and Desktop */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+            
+            .customer-container {
+                padding: 0.5rem;
+                max-width: 100%;
+            }
+            
+            .customer-header {
+                margin-bottom: 1.5rem;
+                padding: 0.5rem 0;
+            }
+            
+            .customer-header h1 {
+                font-size: 1.8rem;
+                line-height: 1.2;
+            }
+            
+            .customer-header p {
+                font-size: 1rem;
+            }
+            
+            .header-icon {
+                font-size: 2.5rem;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+                border-radius: 15px;
+                margin: 0;
+            }
+            
+            .form-label {
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .form-control {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+                border-radius: 12px;
+            }
+            
+            .btn-submit {
+                padding: 1rem 1.5rem;
+                font-size: 1.1rem;
+                border-radius: 15px;
+            }
+            
+            .char-counter {
+                font-size: 0.8rem;
+            }
+            
+            .success-message h4 {
+                font-size: 1.3rem;
+            }
+            
+            .success-message p {
+                font-size: 0.9rem;
+            }
+            
+            .matrix-bg {
+                display: none; /* Hide background animation on mobile for better performance */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .customer-container {
+                padding: 0.25rem;
+            }
+            
+            .customer-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .customer-header p {
+                font-size: 0.9rem;
+            }
+            
+            .header-icon {
+                font-size: 2rem;
+            }
+            
+            .form-container {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            
+            .form-control {
+                padding: 0.7rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            .btn-submit {
+                padding: 0.9rem 1.2rem;
+                font-size: 1rem;
+            }
+            
+            .form-label {
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Large screen optimizations */
+        @media (min-width: 1200px) {
+            .customer-container {
+                max-width: 900px;
+                padding: 2rem 1rem;
+            }
+            
+            .customer-header {
+                margin-bottom: 3rem;
+                padding: 2rem 0;
+            }
+            
+            .customer-header h1 {
+                font-size: 3.2rem;
+            }
+            
+            .customer-header p {
+                font-size: 1.4rem;
+            }
+            
+            .header-icon {
+                font-size: 4rem;
+            }
+            
+            .form-container {
+                padding: 3rem;
+                border-radius: 25px;
+            }
+            
+            .form-control {
+                padding: 1.2rem 1.5rem;
+                font-size: 1.1rem;
+            }
+            
+            .btn-submit {
+                padding: 1.3rem 2.5rem;
+                font-size: 1.3rem;
+            }
+        }
+        
+        /* Landscape orientation on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .customer-header {
+                margin-bottom: 1rem;
+                padding: 0.5rem 0;
+            }
+            
+            .customer-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .header-icon {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .form-container {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container py-4">
-        <div class="header-section animate__animated animate__fadeInDown">
-            <h1 class="mb-3">Prozess Automatisierung</h1>
-            <p class="mb-0">Beschreiben Sie Ihren Prozess und wir automatisieren ihn für Sie!</p>
+    <!-- Matrix/Hacker Background Animation -->
+    <div class="matrix-bg" id="matrix-background"></div>
+    
+    <div class="customer-container">
+        <!-- Customer-Friendly Header -->
+        <div class="customer-header animate__animated animate__fadeInDown">
+            <div class="header-icon">
+                <i class="fas fa-cogs"></i>
+            </div>
+            <h1>Prozess Automatisierung</h1>
+            <p>Beschreiben Sie Ihren Prozess und wir automatisieren ihn für Sie!</p>
         </div>
-        
-        {% if success %}
-            <div class="alert alert-success animate__animated animate__fadeInDown">
-                <h4 class="alert-heading">Erfolgreich gesendet!</h4>
-                <p class="mb-0">Vielen Dank für Ihre Anfrage. Wir werden uns zeitnah bei Ihnen melden.</p>
-            </div>
-        {% elif error %}
-            <div class="alert alert-danger animate__animated animate__fadeInDown">
-                <h4 class="alert-heading">Fehler!</h4>
-                <p class="mb-0">Es ist ein Fehler beim Senden aufgetreten. Bitte versuchen Sie es erneut.</p>
-            </div>
-        {% endif %}
 
-        <div class="request-form animate__animated animate__fadeInUp">
-            <form method="POST" id="processForm">
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name *</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
+        <!-- Modern Form -->
+        <div class="form-container animate__animated animate__fadeInUp">
+            <form id="processForm">
+                <div class="mb-4">
+                    <label for="name" class="form-label">
+                        <i class="fas fa-user me-2 text-primary"></i>Name *
+                    </label>
+                    <input type="text" class="form-control" id="name" name="name" required 
+                           placeholder="z.B. Max Mustermann, Dr. Anna Schmidt">
                 </div>
                 
-                <div class="mb-3">
-                    <label for="company" class="form-label">Firma *</label>
-                    <input type="text" class="form-control" id="company" name="company" required>
+                <div class="mb-4">
+                    <label for="company" class="form-label">
+                        <i class="fas fa-building me-2 text-primary"></i>Firma *
+                    </label>
+                    <input type="text" class="form-control" id="company" name="company" required 
+                           placeholder="z.B. Mustermann GmbH, Schneider & Partner, IT-Solutions AG">
                 </div>
                 
-                <div class="mb-3">
-                    <label for="contact" class="form-label">Kontaktmöglichkeit *</label>
+                <div class="mb-4">
+                    <label for="contact" class="form-label">
+                        <i class="fas fa-envelope me-2 text-primary"></i>Kontaktmöglichkeit *
+                    </label>
                     <input type="text" class="form-control" id="contact" name="contact" required 
-                           placeholder="E-Mail, Telefon oder bevorzugter Kontaktweg">
+                           placeholder="E-Mail, Telefon (+49...) oder bevorzugter Kontaktweg"
+                           pattern=".*"
+                           title="E-Mail-Adresse, Telefonnummer oder andere Kontaktmöglichkeit">
                 </div>
                 
-                <div class="mb-3">
-                    <label for="link" class="form-label">Link (optional)</label>
-                    <input type="url" class="form-control" id="link" name="link" placeholder="https://...">
+                <div class="mb-4">
+                    <label for="link" class="form-label">
+                        <i class="fas fa-link me-2 text-secondary"></i>Link (optional)
+                    </label>
+                    <input type="url" class="form-control" id="link" name="link" 
+                           placeholder="https://beispiel.de"
+                           pattern="https://.*"
+                           title="Bitte geben Sie eine vollständige URL ein, die mit https:// beginnt">
+                    <div class="form-text">Links müssen mit https:// beginnen</div>
                 </div>
                 
-                <div class="mb-3">
-                    <label for="description" class="form-label">Beschreibung des Prozesses *</label>
-                    <textarea class="form-control" id="description" name="description" rows="5" required 
+                <div class="mb-4">
+                    <label for="description" class="form-label">
+                        <i class="fas fa-edit me-2 text-primary"></i>Beschreibung des Prozesses *
+                    </label>
+                    <textarea class="form-control" id="description" name="description" rows="6" required 
                               placeholder="Beschreiben Sie hier detailliert Ihren Prozess, den Sie automatisieren möchten..."></textarea>
                     <div class="form-text">Je detaillierter Ihre Beschreibung, desto besser können wir Ihren Prozess verstehen und automatisieren.</div>
-                    <div class="char-counter mt-1">
+                    <div class="char-counter">
                         <span id="charCount">0</span> Zeichen <span id="helpText">(mehr Details hilfreich)</span>
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-success btn-lg w-100 animate__animated animate__pulse">
-                    Anfrage absenden
-                </button>
+                <div class="d-grid gap-3">
+                    <button type="submit" class="btn btn-submit btn-lg" id="submitBtn">
+                        <i class="fas fa-paper-plane me-2"></i>Anfrage absenden
+                    </button>
+                </div>
             </form>
+            
+            <!-- Success Message -->
+            <div class="success-message mt-4" id="successMessage" style="display: none;">
+                <div class="alert alert-success animate__animated animate__fadeIn">
+                    <i class="fas fa-check-circle fa-2x mb-2"></i>
+                    <h4>Erfolgreich gesendet!</h4>
+                    <p class="mb-0">Vielen Dank für Ihre Anfrage. Wir werden uns zeitnah bei Ihnen melden.</p>
+                </div>
+            </div>
+            
+            <!-- Error Message -->
+            <div class="error-message mt-4" id="errorMessage" style="display: none;">
+                <div class="alert alert-danger animate__animated animate__fadeIn">
+                    <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                    <h4>Fehler beim Senden</h4>
+                    <p class="mb-0">Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie uns direkt.</p>
+                </div>
+            </div>
         </div>
         
-        <div class="text-center mt-4">
-            <small class="text-muted">
-                <i class="fas fa-shield-alt me-1"></i>
-                Ihre Daten werden sicher übertragen und vertraulich behandelt
-            </small>
+        <!-- Privacy Notice -->
+        <div class="privacy-notice animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+            <i class="fas fa-shield-alt"></i>
+            Ihre Daten werden sicher übertragen und vertraulich behandelt
         </div>
     </div>
 
     <script>
+        // JWT Token für n8n OAuth Authentifizierung (gleicher Token wie in workflow_form.html)
+        const N8N_JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJuOG4tZGFzaGJvYXJkIiwic3ViIjoid2ViaG9vay1hY2Nlc3MiLCJhdWQiOiJuOG4tYXBpIiwiZXhwIjoxNzg1NzYyMDY0LCJpYXQiOjE3NTQyMjYwNjQsInNjb3BlIjoid2ViaG9vazpyZWFkIHdlYmhvb2s6d3JpdGUifQ.SY3I6MyNNXIXdNTYDqHk_79gNu_2QT_DzjxSZlmJbaA';
+        
         // Zeichen-Zähler für Beschreibung
         const descriptionField = document.getElementById('description');
         const charCount = document.getElementById('charCount');
@@ -123,9 +497,258 @@
                 helpText.style.color = '#198754';
             } else {
                 helpText.textContent = '(sehr detailliert - perfekt!)';
-                helpText.style.color = '#198754';
+                helpText.style.color = '#28a745';
             }
         });
+
+        // Link-Validierung in Echtzeit
+        const linkField = document.getElementById('link');
+        linkField.addEventListener('input', function() {
+            const value = this.value.trim();
+            if (value && !value.startsWith('https://')) {
+                this.setCustomValidity('Links müssen mit https:// beginnen');
+                this.classList.add('is-invalid');
+            } else {
+                this.setCustomValidity('');
+                this.classList.remove('is-invalid');
+            }
+        });
+
+        // Kontakt-Validierung (prüft auf E-Mail oder Telefonnummer)
+        const contactField = document.getElementById('contact');
+        contactField.addEventListener('input', function() {
+            const value = this.value.trim();
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const phonePattern = /^[\+]?[0-9\-\(\)\s]+$/;
+            
+            if (value && !emailPattern.test(value) && !phonePattern.test(value)) {
+                this.setCustomValidity('Bitte geben Sie eine gültige E-Mail-Adresse oder Telefonnummer ein');
+                this.classList.add('is-invalid');
+            } else {
+                this.setCustomValidity('');
+                this.classList.remove('is-invalid');
+            }
+        });
+        
+        // Form submission handler
+        document.getElementById('processForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // UI Updates
+            const submitBtn = document.getElementById('submitBtn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Wird gesendet...';
+            
+            // Collect form data
+            const formData = {
+                name: document.getElementById('name').value,
+                firma: document.getElementById('company').value,
+                kontakt: document.getElementById('contact').value,
+                link: document.getElementById('link').value || '',
+                beschreibung: document.getElementById('description').value
+            };
+            
+            try {
+                // Erste Methode: CORS mit Authorization Header
+                const urlParams = new URLSearchParams();
+                urlParams.append('name', formData.name);
+                urlParams.append('firma', formData.firma);
+                urlParams.append('kontakt', formData.kontakt);
+                urlParams.append('link', formData.link);
+                urlParams.append('beschreibung', formData.beschreibung);
+                
+                const webhookUrl = `https://stade-001.app.n8n.cloud/webhook/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                
+                console.log('Versuche API-Aufruf mit CORS...', webhookUrl);
+                
+                const response = await fetch(webhookUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${N8N_JWT_TOKEN}`
+                    },
+                    mode: 'cors'
+                });
+                
+                console.log('API Response Status:', response.status);
+                
+                if (response.status >= 200 && response.status < 400) {
+                    // Success
+                    console.log('API-Aufruf erfolgreich!');
+                    successMessage.style.display = 'block';
+                    document.getElementById('processForm').reset();
+                    charCount.textContent = '0';
+                    helpText.textContent = '(mehr Details hilfreich)';
+                    helpText.style.color = '#6c757d';
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                    return; // Beende hier erfolgreich
+                } else if (response.status === 401 || response.status === 403) {
+                    throw new Error(`Authentifizierungsfehler (${response.status}): JWT Token ungültig oder abgelaufen`);
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+            } catch (error) {
+                console.error('Erster Versuch fehlgeschlagen:', error);
+                
+                // Zweiter Versuch: No-CORS Fallback
+                try {
+                    console.log('Versuche Fallback mit no-cors...');
+                    
+                    const urlParams = new URLSearchParams();
+                    urlParams.append('name', formData.name);
+                    urlParams.append('firma', formData.firma);
+                    urlParams.append('kontakt', formData.kontakt);
+                    urlParams.append('link', formData.link);
+                    urlParams.append('beschreibung', formData.beschreibung);
+                    
+                    const webhookUrl = `https://stade-001.app.n8n.cloud/webhook/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                    
+                    await fetch(webhookUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${N8N_JWT_TOKEN}`
+                        },
+                        mode: 'no-cors'
+                    });
+                    
+                    console.log('No-CORS Fallback gesendet');
+                    // Bei no-cors können wir den Status nicht prüfen, also nehmen wir an, dass es erfolgreich war
+                    successMessage.style.display = 'block';
+                    document.getElementById('processForm').reset();
+                    charCount.textContent = '0';
+                    helpText.textContent = '(mehr Details hilfreich)';
+                    helpText.style.color = '#6c757d';
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                    return; // Beende hier erfolgreich
+                    
+                } catch (fallbackError) {
+                    console.error('Auch Fallback fehlgeschlagen:', fallbackError);
+                    
+                    // Dritter Versuch: Direkte URL ohne CORS (Browser öffnet Link)
+                    try {
+                        console.log('Versuche direkten URL-Aufruf...');
+                        
+                        const urlParams = new URLSearchParams();
+                        urlParams.append('name', formData.name);
+                        urlParams.append('firma', formData.firma);
+                        urlParams.append('kontakt', formData.kontakt);
+                        urlParams.append('link', formData.link);
+                        urlParams.append('beschreibung', formData.beschreibung);
+                        
+                        const webhookUrl = `https://stade-001.app.n8n.cloud/webhook/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                        
+                        // Erstelle ein unsichtbares iframe für den Request
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = webhookUrl;
+                        document.body.appendChild(iframe);
+                        
+                        // Nach 2 Sekunden als erfolgreich betrachten und iframe entfernen
+                        setTimeout(() => {
+                            document.body.removeChild(iframe);
+                            console.log('iframe-Methode abgeschlossen');
+                            successMessage.style.display = 'block';
+                            document.getElementById('processForm').reset();
+                            charCount.textContent = '0';
+                            helpText.textContent = '(mehr Details hilfreich)';
+                            helpText.style.color = '#6c757d';
+                            successMessage.scrollIntoView({ behavior: 'smooth' });
+                        }, 2000);
+                        
+                        return; // Beende hier
+                        
+                    } catch (iframeError) {
+                        console.error('Alle Methoden fehlgeschlagen:', iframeError);
+                        
+                        // Letzter Versuch: Zeige Benutzer-freundliche Nachricht mit manueller Option
+                        errorMessage.style.display = 'block';
+                        
+                        const urlParams = new URLSearchParams();
+                        urlParams.append('name', formData.name);
+                        urlParams.append('firma', formData.firma);
+                        urlParams.append('kontakt', formData.kontakt);
+                        urlParams.append('link', formData.link);
+                        urlParams.append('beschreibung', formData.beschreibung);
+                        
+                        const manualUrl = `https://stade-001.app.n8n.cloud/webhook/a2b3f05e-a9b4-44d4-90da-2bcc2e85d799?${urlParams.toString()}`;
+                        
+                        errorMessage.querySelector('.alert').innerHTML = `
+                            <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+                            <h4>Automatische Übertragung fehlgeschlagen</h4>
+                            <p class="mb-2">Die Daten konnten nicht automatisch übertragen werden. Mögliche Ursachen:</p>
+                            <ul class="text-start mb-3">
+                                <li>Browser-Sicherheitseinstellungen (CORS)</li>
+                                <li>Netzwerk-Verbindungsprobleme</li>
+                                <li>Firewall oder Proxy-Einstellungen</li>
+                            </ul>
+                            <p class="mb-3"><strong>Lösung:</strong> Klicken Sie auf den folgenden Button, um die Daten manuell zu übertragen:</p>
+                            <a href="${manualUrl}" target="_blank" class="btn btn-primary mb-2">
+                                <i class="fas fa-external-link-alt me-2"></i>Daten manuell übertragen
+                            </a>
+                            <p class="mb-0"><small>Der Link öffnet sich in einem neuen Tab und überträgt Ihre Daten direkt.</small></p>
+                        `;
+                        errorMessage.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Anfrage absenden';
+            }
+        });
+        
+        // Matrix Background Animation
+        function initMatrixBackground() {
+            const matrixBg = document.getElementById('matrix-background');
+            if (!matrixBg) return;
+            
+            const codeSnippets = [
+                'if (request.validate()) { process.automation(); }',
+                'const result = await api.submit(formData);',
+                'database.orders.create(customerRequest);',
+                'notification.send("New automation request");',
+                'logger.info(`Processing request: ${id}`);',
+                'workflow.trigger("external_request", data);',
+                'emailService.confirmReceipt(customer);',
+                'queue.add("process", {priority: "high"});'
+            ];
+            
+            function createCodeLine() {
+                const codeLine = document.createElement('div');
+                codeLine.className = 'code-line';
+                codeLine.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                codeLine.style.top = Math.random() * 100 + '%';
+                codeLine.style.animationDelay = Math.random() * 3 + 's';
+                
+                matrixBg.appendChild(codeLine);
+                
+                setTimeout(() => {
+                    if (codeLine.parentNode) {
+                        codeLine.parentNode.removeChild(codeLine);
+                    }
+                }, 25000);
+            }
+            
+            // Initial code lines
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createCodeLine, i * 800);
+            }
+            
+            // Continuous code generation
+            setInterval(createCodeLine, 2500);
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initMatrixBackground);
     </script>
 </body>
 </html>

@@ -2,157 +2,767 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Login - n8n Dashboard</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - N8N Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background: linear-gradient(120deg,#667eea 0%,#764ba2 100%);
-            font-family: 'Segoe UI',sans-serif;
+            background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: gradientFlow 20s ease infinite;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            margin: 0;
+            padding: 1rem;
+            /* Performance optimizations */
+            will-change: background-position;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
+        
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Floating Code Elements - Performance optimized */
+        .floating-code {
+            position: absolute;
+            color: rgba(100, 255, 218, 0.4);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            animation: float 25s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+            /* Performance optimizations */
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateX(-100px) translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(-50px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Automation Icons */
+        .automation-icon {
+            position: absolute;
+            color: rgba(102, 126, 234, 0.4);
+            animation: drift 25s linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes drift {
+            0% {
+                transform: translateX(-50px) translateY(0) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(calc(100vw + 50px)) translateY(-30px) scale(0.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Data Flow Lines */
+        .data-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #64ffda, transparent);
+            animation: dataFlow 12s linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes dataFlow {
+            0% {
+                width: 0;
+                left: 0;
+            }
+            50% {
+                width: 200px;
+            }
+            100% {
+                width: 0;
+                left: 100%;
+            }
+        }
+        
+        /* Particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #64ffda;
+            border-radius: 50%;
+            animation: particle 15s linear infinite;
+        }
+        
+        @keyframes particle {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(50px);
+                opacity: 0;
+            }
+        }
+        
         .login-container {
-            max-width: 400px;
-            width: 100%;
-            padding: 2rem;
-        }
-        .login-card {
-            background: rgba(255,255,255,0.95);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 
+                0 25px 45px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            /* Improved centering - moved away from top */
+            transform: translateY(-5vh);
+            /* Performance optimizations */
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .login-header h2 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .login-header p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0;
+            font-size: 1.1rem;
+        }
+        
+        /* Marketing Slogan */
+        .marketing-slogan {
+            color: rgba(100, 255, 218, 0.9);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+            animation: glow 3s ease-in-out infinite alternate;
+            text-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(100, 255, 218, 0.5), 0 0 30px rgba(100, 255, 218, 0.3); }
+            to { text-shadow: 0 0 30px rgba(100, 255, 218, 0.8), 0 0 40px rgba(100, 255, 218, 0.5); }
+        }
+        
+        /* Hidden admin section */
+        .admin-section {
+            display: none;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .admin-section.show {
+            display: block;
+            opacity: 1;
+        }
+        
+        .admin-toggle {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+            text-decoration: underline;
+        }
+        
+        .admin-toggle:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .brand-icon {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #64ffda, #667eea);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            color: #ffffff;
+            transition: all 0.3s ease;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            width: 100%;
+            text-align: center;
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #64ffda;
+            box-shadow: 
+                0 0 0 0.2rem rgba(100, 255, 218, 0.25),
+                0 0 20px rgba(100, 255, 218, 0.3);
+            color: #ffffff;
+        }
+        
+        .form-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, #64ffda 0%, #667eea 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
         }
-        .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin: -2rem -2rem 2rem -2rem;
-        }
-        .login-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-        .form-control {
-            border-radius: 12px;
-            border: 2px solid #e9ecef;
-            padding: 12px 16px;
-            transition: all 0.3s ease;
-        }
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102,126,234,.25);
-        }
-        .btn-login {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 12px;
-            padding: 12px 30px;
-            font-weight: 600;
+        
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            transition: all 0.3s ease;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
+        
+        .btn-login:hover::before {
+            left: 100%;
+        }
+        
         .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102,126,234,0.3);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 35px rgba(100, 255, 218, 0.4),
+                0 5px 15px rgba(0, 0, 0, 0.3);
         }
-        .animate__animated {animation-duration: 1s;}
-        .error-message {
-            background: linear-gradient(45deg, #dc3545, #fd7e14);
+        
+        .error-alert {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            border: none;
+            border-radius: 15px;
             color: white;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
+        
         .public-link {
             text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.2);
+            margin-top: 2.5rem;
+            width: 100%;
         }
+        
         .public-link a {
-            color: #667eea;
+            color: #ffffff;
             text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            font-weight: 700;
+            font-size: 1.3rem;
+            transition: all 0.4s ease;
+            padding: 1.2rem 2.5rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+            box-shadow: 
+                0 8px 25px rgba(40, 167, 69, 0.4),
+                0 0 40px rgba(40, 167, 69, 0.3);
+            animation: pulse-green 2s infinite;
+            position: relative;
+            overflow: hidden;
+            min-width: 280px;
+            letter-spacing: 0.5px;
         }
+        
+        .public-link a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        
+        .public-link a:hover::before {
+            left: 100%;
+        }
+        
         .public-link a:hover {
-            color: #764ba2;
-            text-decoration: underline;
+            color: #ffffff;
+            background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 15px 35px rgba(40, 167, 69, 0.6),
+                0 0 60px rgba(40, 167, 69, 0.4);
+        }
+        
+        @keyframes pulse-green {
+            0% { 
+                box-shadow: 
+                    0 8px 25px rgba(40, 167, 69, 0.4),
+                    0 0 40px rgba(40, 167, 69, 0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 12px 35px rgba(40, 167, 69, 0.6),
+                    0 0 60px rgba(40, 167, 69, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 8px 25px rgba(40, 167, 69, 0.4),
+                    0 0 40px rgba(40, 167, 69, 0.3);
+            }
+        }
+        
+        /* Loading animation for password field */
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #64ffda, #667eea);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .input-wrapper:focus-within::after {
+            width: 100%;
+        }
+        
+        /* Success checkmark animation */
+        .success-check {
+            color: #64ffda;
+            animation: checkmark 0.5s ease-in-out;
+        }
+        
+        @keyframes checkmark {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Additional centering styles */
+        .login-header {
+            width: 100%;
+            text-align: center;
+        }
+        
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .mb-4 {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .form-label {
+            display: block;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .d-grid {
+            width: 100%;
+        }
+        
+        .public-link {
+            width: 100%;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+                min-height: 100vh;
+            }
+            
+            .login-container {
+                padding: 1.5rem;
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto;
+                transform: translateY(-2vh);
+                border-radius: 15px;
+            }
+            
+            .login-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .login-header p {
+                font-size: 1rem;
+            }
+            
+            .brand-icon {
+                font-size: 2.5rem;
+            }
+            
+            .marketing-slogan {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .public-link a {
+                font-size: 1.1rem;
+                padding: 1rem 2rem;
+                min-width: auto;
+            }
+            
+            .floating-code {
+                display: none; /* Hide floating elements on mobile for better performance */
+            }
+            
+            .automation-icon {
+                display: none; /* Hide automation icons on mobile */
+            }
+            
+            .data-line {
+                display: none; /* Hide data lines on mobile */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1rem;
+                margin: 0.5rem;
+                width: calc(100% - 1rem);
+            }
+            
+            .login-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .marketing-slogan {
+                font-size: 0.9rem;
+            }
+            
+            .public-link a {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+            }
+            
+            .form-control {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .btn-login {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+        
+        /* Large screen optimizations */
+        @media (min-width: 1200px) {
+            .login-container {
+                max-width: 520px;
+                padding: 3rem;
+            }
+            
+            .marketing-slogan {
+                font-size: 1.3rem;
+            }
+            
+            .public-link a {
+                font-size: 1.4rem;
+                padding: 1.3rem 3rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container animate__animated animate__fadeIn">
-        <div class="login-card">
-            <div class="login-header">
-                <div class="login-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h2 class="mb-0">Admin Login</h2>
-                <p class="mb-0 opacity-75">n8n Dashboard</p>
+    <!-- Floating Code Elements -->
+    <div class="floating-code" style="top: 10%; animation-delay: 0s;">
+        if (workflow.active) { executeAutomation(); }
+    </div>
+    <div class="floating-code" style="top: 30%; animation-delay: 5s;">
+        const result = await n8n.trigger('webhook');
+    </div>
+    <div class="floating-code" style="top: 50%; animation-delay: 10s;">
+        database.query('SELECT * FROM orders');
+    </div>
+    <div class="floating-code" style="top: 70%; animation-delay: 15s;">
+        automation.schedule('0 9 * * *');
+    </div>
+    <div class="floating-code" style="top: 90%; animation-delay: 2s;">
+        response.status(200).json({success: true});
+    </div>
+    
+    <!-- Automation Icons -->
+    <div class="automation-icon" style="top: 15%; font-size: 2rem; animation-delay: 1s;">
+        <i class="fas fa-robot"></i>
+    </div>
+    <div class="automation-icon" style="top: 35%; font-size: 1.5rem; animation-delay: 6s;">
+        <i class="fas fa-cogs"></i>
+    </div>
+    <div class="automation-icon" style="top: 55%; font-size: 2.5rem; animation-delay: 11s;">
+        <i class="fas fa-project-diagram"></i>
+    </div>
+    <div class="automation-icon" style="top: 75%; font-size: 1.8rem; animation-delay: 16s;">
+        <i class="fas fa-microchip"></i>
+    </div>
+    <div class="automation-icon" style="top: 25%; font-size: 1.3rem; animation-delay: 3s;">
+        <i class="fas fa-bolt"></i>
+    </div>
+    
+    <!-- Data Flow Lines -->
+    <div class="data-line" style="top: 20%; animation-delay: 0s;"></div>
+    <div class="data-line" style="top: 40%; animation-delay: 4s;"></div>
+    <div class="data-line" style="top: 60%; animation-delay: 8s;"></div>
+    <div class="data-line" style="top: 80%; animation-delay: 12s;"></div>
+    
+    <!-- Particles -->
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 40%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 8s;"></div>
+    <div class="particle" style="left: 60%; animation-delay: 10s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 12s;"></div>
+    <div class="particle" style="left: 80%; animation-delay: 14s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 1s;"></div>
+    
+    <div class="login-container animate__animated animate__fadeInUp">
+        <div class="login-header">
+            <div class="brand-icon">
+                <i class="fas fa-network-wired"></i>
             </div>
-            
-            <div class="p-4">
-                {% if error %}
-                    <div class="error-message animate__animated animate__shakeX">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>Ungültiges Passwort!</strong> Bitte versuchen Sie es erneut.
-                    </div>
-                {% endif %}
-
-                <form method="POST">
-                    <div class="mb-4">
-                        <label for="password" class="form-label">
-                            <i class="fas fa-lock me-2"></i>Passwort
-                        </label>
-                        <input type="password" class="form-control" id="password" name="password" 
-                               required autofocus placeholder="Admin-Passwort eingeben">
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary btn-login">
-                        <i class="fas fa-sign-in-alt me-2"></i>
-                        Anmelden
-                    </button>
-                </form>
-
-                <div class="public-link">
-                    <small class="text-muted">
-                        <i class="fas fa-info-circle me-1"></i>
-                        Öffentliche Seite: 
-                        <a href="/prozess-anfrage" target="_blank">
-                            Prozess Anfrage
-                        </a>
-                    </small>
-                </div>
-            </div>
+            <h2><i class="fas fa-robot me-2"></i>N8N Dashboard</h2>
+            <p>Workflow Automation Control Center</p>
         </div>
-
-        <div class="text-center mt-4">
-            <small style="color: rgba(255,255,255,0.7);">
-                © 2025 n8n Workflow Solutions
-            </small>
+        
+        <!-- Marketing Slogan -->
+        <div class="marketing-slogan">
+            🚀 Automatisiere dein Business - Spare Zeit & Kosten! 💼
+        </div>
+        
+        <!-- Primary CTA for customers -->
+        <div class="public-link">
+            <a href="/neue-anfrage" target="_blank">
+                <i class="fas fa-magic me-2"></i>
+                Neue Automatisierungsanfrage starten
+                <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+        
+        <!-- Hidden Admin Access -->
+        <button class="admin-toggle" onclick="toggleAdmin()">
+            <i class="fas fa-cog me-1"></i>Administrator-Zugang
+        </button>
+        
+        <div class="admin-section" id="adminSection">
+            {% if error %}
+            <div class="alert error-alert animate__animated animate__shakeX" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Zugriff verweigert! Bitte überprüfen Sie Ihr Passwort.
+            </div>
+            {% endif %}
+            
+            <form method="POST" id="loginForm">
+                <div class="mb-4">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock me-2"></i>Admin Authentifizierung
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="password" class="form-control" id="password" name="password" required 
+                               placeholder="Admin-Sicherheitsschlüssel eingeben">
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-login">
+                        <i class="fas fa-sign-in-alt me-2"></i>Admin System aktivieren
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-
+    
     <script>
-        // Auto-focus auf Passwort-Feld
-        document.getElementById('password').focus();
+        // Toggle Admin Section
+        function toggleAdmin() {
+            const adminSection = document.getElementById('adminSection');
+            const toggleButton = document.querySelector('.admin-toggle');
+            
+            if (adminSection.classList.contains('show')) {
+                adminSection.classList.remove('show');
+                toggleButton.innerHTML = '<i class="fas fa-cog me-1"></i>Administrator-Zugang';
+            } else {
+                adminSection.classList.add('show');
+                toggleButton.innerHTML = '<i class="fas fa-times me-1"></i>Zugang schließen';
+                // Auto-focus auf Passwort-Feld wenn sichtbar
+                setTimeout(() => {
+                    document.getElementById('password').focus();
+                }, 300);
+            }
+        }
         
-        // Enter-Key handling
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.querySelector('form').submit();
+        // Performance optimized particle creation
+        function createParticle() {
+            if (document.querySelectorAll('.particle').length > 15) return; // Limit particles
+            
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            particle.style.willChange = 'transform';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.remove();
+                }
+            }, 25000);
+        }
+        
+        // Performance optimized floating code creation
+        function createFloatingCode() {
+            if (document.querySelectorAll('.floating-code').length > 10) return; // Limit floating codes
+            
+            const codes = [
+                'workflow.execute(data);',
+                'await api.post("/webhook");',
+                'scheduler.cron("0 */6 * * *");',
+                'database.update(records);',
+                'automation.trigger(event);',
+                'response.json({status: "ok"});',
+                'n8n.workflow.activate();',
+                'process.automation.start();',
+                'const data = await fetch(api);',
+                'pipeline.run(workflow);'
+            ];
+            
+            const code = document.createElement('div');
+            code.className = 'floating-code';
+            code.style.top = Math.random() * 80 + 10 + '%';
+            code.style.animationDelay = '0s';
+            code.style.animationDuration = Math.random() * 15 + 20 + 's';
+            code.style.willChange = 'transform';
+            code.textContent = codes[Math.floor(Math.random() * codes.length)];
+            document.body.appendChild(code);
+            
+            setTimeout(() => {
+                if (code.parentNode) {
+                    code.remove();
+                }
+            }, 30000);
+        }
+        
+        // Throttled intervals for better performance
+        setInterval(createParticle, 4000);
+        setInterval(createFloatingCode, 5000);
+        
+        // Enhanced form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    const button = this.querySelector('.btn-login');
+                    const icon = button.querySelector('i');
+                    
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Authentifiziere...';
+                    button.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                });
             }
         });
+        
+        // Reduce animations on low-performance devices
+        if (navigator.hardwareConcurrency <= 2) {
+            document.documentElement.style.setProperty('--animation-duration', '30s');
+        }
     </script>
 </body>
 </html>
